@@ -8,12 +8,13 @@ tags:
   - overview
 ---
 
-# Vault Overview
+# 知识库概览
 
-This is the knowledge layer of a Compass vault. The life workflows (journal, retreats, planning, habits, tasks, people, writing) live in the numbered folders and are driven from Obsidian; see [[Compass Dashboard]] and [[00 Start Here]]. The `wiki/` folder is managed by the claude-obsidian plugin and holds source-backed knowledge: ingested sources, saved answers, concepts, and their provenance ledgers.
+这是 Compass 的知识层。日记、季度复盘、规划、习惯、任务、人物和写作放在带编号的目录中，参见 [[Compass Dashboard|Compass 仪表盘]]和 [[00 Start Here|从这里开始]]。`wiki/` 由可选的 claude-obsidian 插件管理，用于保存有来源依据的知识、答案、概念和来源账本。
 
 ## What goes where
-- Personal operating data (daily notes, retreats, planning, people, tasks) stays outside `wiki/` and is never ingested into the ledgers.
-- Sources you want to keep with provenance (articles, papers, transcripts, clipped pages) go through `inbox/` and end up in `wiki/sources/`.
-- Answers and decisions worth keeping are saved to `wiki/concepts/` with `/save`.
-- See [[routing-map]] for the exact rules.
+**内容存放位置**
+- 日记、季度复盘、规划、人物和任务等个人记录保留在 `wiki/` 之外，不导入来源账本。
+- 需要保留来源的文章、论文、转录或剪藏页面先放入 `inbox/`，处理后存入 `wiki/sources/`。
+- 值得保存的答案与决定通过 `/save` 写入 `wiki/concepts/`。
+- 具体规则见 [[routing-map|知识路由规则]]。

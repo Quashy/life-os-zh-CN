@@ -4,27 +4,30 @@ example: true
 tags:
   - planning
 ---
-A template week, not a schedule. It answers one question: where does the time for the things I said were important actually live? Reviewed at every personal retreat and checked at every weekly note.
+这是一周的时间分配模板，用来回答：那些被我视为重要的事，究竟安排在什么时间？每次季度复盘时更新，每周规划时核对。
 
 ## Grid
-The grid below is a neutral example (`example: true` in the properties). Replace it with your week at the first retreat, then delete that property.
-| Block | Mon | Tue | Wed | Thu | Fri | Sat | Sun |
+**时间表**
+下表是通用示例，属性中标有 `example: true`。在第一次季度复盘时替换为自己的安排，完成后移除该属性。
+| 时段 | 周一 | 周二 | 周三 | 周四 | 周五 | 周六 | 周日 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 06:00 | Reading + journal | Reading + journal | Reading + journal | Reading + journal | Reading + journal | Reading + journal | Reading + journal |
-| 07:00 | Exercise | Exercise | Exercise | Exercise | Exercise | Exercise | Rest |
-| 08:00 | Deep work: writing | Deep work: writing | Deep work: writing | Deep work: writing | Weekly review | Family | Family |
-| 10:00 | Deep work | Meetings | Deep work | Meetings | Deep work | Family | Community |
-| 12:00 | Lunch | Lunch | Lunch | Lunch | Lunch | Lunch | Lunch |
-| 13:00 | Admin / tasks | Deep work | Admin / tasks | Deep work | Admin / tasks | Free | Free |
-| 15:00 | Shallow work | Shallow work | Shallow work | Shallow work | Plan next week | Free | Free |
-| 17:00 | Family | Family | Family | Family | Family | Family | Family |
-| 20:00 | Read | Read | Evening with someone | Read | Read | Read | Daily questions + plan |
-| 21:00 | Daily questions | Daily questions | Daily questions | Daily questions | Daily questions | Daily questions | Sleep |
+| 06:00 | 阅读与日记 | 阅读与日记 | 阅读与日记 | 阅读与日记 | 阅读与日记 | 阅读与日记 | 阅读与日记 |
+| 07:00 | 运动 | 运动 | 运动 | 运动 | 运动 | 运动 | 休息 |
+| 08:00 | 深度工作：写作 | 深度工作：写作 | 深度工作：写作 | 深度工作：写作 | 每周复盘 | 家庭 | 家庭 |
+| 10:00 | 深度工作 | 会议 | 深度工作 | 会议 | 深度工作 | 家庭 | 社区活动 |
+| 12:00 | 午餐 | 午餐 | 午餐 | 午餐 | 午餐 | 午餐 | 午餐 |
+| 13:00 | 事务与任务 | 深度工作 | 事务与任务 | 深度工作 | 事务与任务 | 自由安排 | 自由安排 |
+| 15:00 | 常规事务 | 常规事务 | 常规事务 | 常规事务 | 规划下周 | 自由安排 | 自由安排 |
+| 17:00 | 家庭 | 家庭 | 家庭 | 家庭 | 家庭 | 家庭 | 家庭 |
+| 20:00 | 阅读 | 阅读 | 与重要的人共度夜晚 | 阅读 | 阅读 | 阅读 | 每日问题与计划 |
+| 21:00 | 每日问题 | 每日问题 | 每日问题 | 每日问题 | 每日问题 | 每日问题 | 睡眠 |
 
 ## Rules
-- Intentions from the quarterly retreat get a recurring block before anything else does.
-- Deep work blocks are protected. Meetings go in meeting blocks.
-- The daily questions block is non-negotiable: it is the foundation the whole system sits on.
+**安排原则**
+- 优先为季度复盘确定的意向安排固定时段。
+- 保护深度工作时段，把会议安排在预留的会议时段。
+- 保留每日问答的时间，这是整个系统的基础。
 
 ## Review log
+**回顾记录**
 -

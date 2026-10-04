@@ -29,16 +29,17 @@ DROP_GLOBS = [
 USER_CONTENT = ["01 Journal/", "02 Retreats/", "04 Projects/", "05 People/", "06 Writing/", "07 Library/",
                 "09 Reading/Chapters/", "09 Reading/Verses/", "09 Reading/Study Notes/", "09 Reading/Topics/"]
 KEEP_IN_USER_FOLDERS = re.compile(r".* Board\.md$")
-BOARD_DEFAULTS = {
-    "04 Projects/Projects Board.md": "Projects Board",
-    "06 Writing/Newsletters/Newsletter Board.md": "Newsletter Board",
-    "06 Writing/YouTube Scripts/YouTube Board.md": "YouTube Board",
-    "06 Writing/Articles/Article Board.md": "Article Board",
-    "06 Writing/Course Content/Course Board.md": "Course Board",
-}
+BOARD_DEFAULTS = (
+    "04 Projects/Projects Board.md",
+    "06 Writing/Newsletters/Newsletter Board.md",
+    "06 Writing/YouTube Scripts/YouTube Board.md",
+    "06 Writing/Articles/Article Board.md",
+    "06 Writing/Course Content/Course Board.md",
+)
 READING_PATHS = ["09 Reading", "Guide/07 Workflow - Daily Reading.md", "scripts/generate_reading_plan.py", "scripts/split_bible.py", "Templates/Study Note.md"]
 
 def dropped(rel):
+    rel = rel.replace("\\", "/")
     if rel.startswith("Meta/attachments/"):
         return not (os.path.basename(rel) in (".gitkeep",) or os.path.basename(rel).startswith("cover."))
     return any(fnmatch.fnmatch(rel, g) for g in DROP_GLOBS)
@@ -54,20 +55,20 @@ def has_example_tag(path):
 
 def copy_tree(live, out):
     for root, dirs, files in os.walk(live):
-        rel_root = os.path.relpath(root, live)
+        rel_root = Path(root).relative_to(live).as_posix()
         rel_root = "" if rel_root == "." else rel_root
         dirs[:] = [d for d in dirs if not dropped(os.path.join(rel_root, d) if rel_root else d)]
         if any(os.path.islink(os.path.join(root, d)) for d in dirs):
             raise ValueError("Package source contains a symbolic-link directory")
         for f in files:
-            rel = os.path.join(rel_root, f) if rel_root else f
+            rel = f"{rel_root}/{f}" if rel_root else f
             if dropped(rel):
                 continue
             source = os.path.join(root, f)
             if os.path.islink(source) or not stat.S_ISREG(os.stat(source).st_mode):
                 raise ValueError("Package source contains a non-regular file")
             default = Path(HERE, "template", "defaults", rel)
-            if default.is_file():
+            if rel in BOARD_DEFAULTS or default.is_file():
                 # Never stage personal values before replacing them with defaults.
                 continue
             if rel.startswith(("03 Planning/", "08 Tasks/", "wiki/")):
@@ -75,31 +76,39 @@ def copy_tree(live, out):
                 continue
             if rel.startswith(".obsidian/") and not rel.startswith(".obsidian/plugins/"):
                 name = rel.removeprefix(".obsidian/")
+                if name == "snippets/lifeos.css":
+                    # Bundle only this reviewed first-party snippet, never user snippets.
+                    target = Path(out, rel)
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(source, target)
+                    continue
                 settings = None
                 if name == "app.json": settings = {"newFileLocation": "current"}
-                elif name in ("appearance.json", "types.json", "webviewer.json"): settings = {}
+                elif name == "appearance.json": settings = {"enabledCssSnippets": ["lifeos"]}
+                elif name in ("types.json", "webviewer.json"): settings = {}
                 elif name == "core-plugins.json":
-                    original = json.loads(Path(source).read_text())
+                    original = json.loads(Path(source).read_text(encoding="utf-8"))
                     if not isinstance(original, dict): raise ValueError("Unsupported core plugin settings")
                     settings = {key: value for key, value in original.items() if isinstance(value, bool)}
                     settings["sync"] = False
                 elif name == "community-plugins.json":
-                    original = json.loads(Path(source).read_text())
+                    original = json.loads(Path(source).read_text(encoding="utf-8"))
                     if not isinstance(original, list) or any(not isinstance(value, str) or not re.fullmatch(r"[a-z0-9-]+", value) for value in original):
                         raise ValueError("Unsupported plugin inventory")
                     settings = original
                 elif name == "hotkeys.json":
-                    original = json.loads(Path(source).read_text())
+                    original = json.loads(Path(source).read_text(encoding="utf-8"))
                     settings = {key: value for key, value in original.items() if key.startswith("life-os-app:")}
+                    # Reviewed workflow shortcuts, independent of machine-local settings.
+                    settings.update({
+                        "quickadd:choice:lifeos-daily": [{"modifiers": ["Mod", "Shift"], "key": "D"}],
+                        "templater-obsidian:Templates/Daily Questions Prompt.md": [{"modifiers": ["Mod", "Shift"], "key": "Q"}],
+                        "quickadd:choice:lifeos-weekly": [{"modifiers": ["Mod", "Alt"], "key": "W"}],
+                    })
                 if settings is not None:
                     target = Path(out, rel)
                     target.parent.mkdir(parents=True, exist_ok=True)
                     target.write_text(json.dumps(settings, indent=2), encoding="utf-8")
-                continue
-            if rel in BOARD_DEFAULTS:
-                target = Path(out, rel)
-                target.parent.mkdir(parents=True, exist_ok=True)
-                target.write_text("---\nkanban-plugin: board\n---\n\n# " + BOARD_DEFAULTS[rel] + "\n\n## Ideas\n\n## In progress\n\n## Done\n", encoding="utf-8")
                 continue
             if rel.startswith(".obsidian/plugins/") and f != "data.json" and f not in ("main.js", "manifest.json", "styles.css", "LICENSE"):
                 continue
@@ -171,7 +180,7 @@ def validate_destination(live, output_root, name):
 
 def reset_defaults(out):
     src = os.path.join(HERE, "template", "defaults")
-    required = ["Meta/Compass Config.md", "03 Planning/Life Theme.md", "03 Planning/Core Values.md", "03 Planning/Ideal Week.md", "08 Tasks/Tasks.md"]
+    required = ["Meta/Compass Config.md", "03 Planning/Life Theme.md", "03 Planning/Core Values.md", "03 Planning/Ideal Week.md", "08 Tasks/Tasks.md", *BOARD_DEFAULTS]
     if any(not Path(src, rel).is_file() or Path(src, rel).is_symlink() for rel in required):
         raise ValueError("Clean source defaults are missing or unsafe")
     for root, _, files in os.walk(src):
@@ -186,9 +195,9 @@ def reset_defaults(out):
 def json_surgery(out):
     def load(rel):
         p = os.path.join(out, rel)
-        return (p, json.load(open(p))) if os.path.exists(p) else (p, None)
+        return (p, json.load(open(p, encoding="utf-8"))) if os.path.exists(p) else (p, None)
     def save(p, d):
-        json.dump(d, open(p, "w"), indent=2, ensure_ascii=False); open(p, "a").write("\n")
+        json.dump(d, open(p, "w", encoding="utf-8"), indent=2, ensure_ascii=False); open(p, "a", encoding="utf-8").write("\n")
     p, d = load(".obsidian/plugins/obsidian-local-rest-api/data.json")
     save(p, {"enableInsecureServer": True})
     p, d = load(".obsidian/plugins/agent-client/data.json")
@@ -229,9 +238,10 @@ def text_surgery(out, without_reading):
     p = os.path.join(out, "Guide/Source - Video Analysis.md")
     if os.path.exists(p):
         s = open(p, encoding="utf-8").read()
-        i = s.find("\n## Transcript")
+        match = re.search(r"\n## (?:Transcript|转录文本)\b", s)
+        i = match.start() if match else -1
         if i != -1:
-            s = s[:i] + "\n## Transcript\nNot included in the distributed template. Watch the video at the source URL above.\n"
+            s = s[:i] + "\n## 转录文本\n发行模板不包含视频转录全文。请通过上方来源链接观看原视频。\n"
             open(p, "w", encoding="utf-8").write(s)
     if without_reading:
         for rel in READING_PATHS:
@@ -240,7 +250,7 @@ def text_surgery(out, without_reading):
             elif os.path.exists(p): os.remove(p)
         p = os.path.join(out, "Templates/Daily Note.md")
         s = open(p, encoding="utf-8").read()
-        s = re.sub(r"> \[!reading\]- Daily reading\n(?:> .*\n)+\n", "", s)
+        s = re.sub(r"> \[!reading\]- [^\n]+\n(?:> .*\n)+\n", "", s)
         s = s.replace("path does not include 09 Reading/Reading Plan\n", "")
         open(p, "w", encoding="utf-8").write(s)
         def edit(rel, fn):
@@ -248,23 +258,23 @@ def text_surgery(out, without_reading):
             if os.path.exists(q):
                 t = open(q, encoding="utf-8").read(); open(q, "w", encoding="utf-8").write(fn(t))
         edit("00 Dashboards/Setup.md", lambda t: t.replace(" Decide the reading module: fill [[Reading Plan]] or delete `09 Reading`.", ""))
-        edit("Guide/00 Start Here.md", lambda t: re.sub(r"^\| 5 \| Daily reading.*\n", "", t, flags=re.M))
+        edit("Guide/00 Start Here.md", lambda t: re.sub(r"^\| 5 \|.*\n", "", t, flags=re.M))
         edit("AGENTS.md", lambda t: re.sub(r"^\| `09 Reading/`.*\n", "", t, flags=re.M))
         edit("README.md", lambda t: re.sub(r"^09 Reading/.*\n", "", t, flags=re.M))
         edit("00 Dashboards/Task Dashboard.md", lambda t: t.replace("path does not include 09 Reading/Reading Plan\n", ""))
         tj = os.path.join(out, ".obsidian/plugins/templater-obsidian/data.json")
         if os.path.exists(tj):
-            d = json.load(open(tj)); d["folder_templates"] = [x for x in d.get("folder_templates", []) if not x.get("folder", "").startswith("09 Reading")]
-            json.dump(d, open(tj, "w"), indent=2); open(tj, "a").write("\n")
+            d = json.load(open(tj, encoding="utf-8")); d["folder_templates"] = [x for x in d.get("folder_templates", []) if not x.get("folder", "").startswith("09 Reading")]
+            json.dump(d, open(tj, "w", encoding="utf-8"), indent=2); open(tj, "a", encoding="utf-8").write("\n")
 
 def version_stamp(out, version):
     plugins = {}
     pdir = os.path.join(out, ".obsidian/plugins")
     for d in sorted(os.listdir(pdir)):
         m = os.path.join(pdir, d, "manifest.json")
-        if os.path.exists(m): plugins[d] = json.load(open(m))["version"]
-    open(os.path.join(out, "Meta/version.md"), "w").write(
-        "---\ntemplate_version: %s\nbuilt: %s\nrelease_status: candidate\nmin_obsidian: 1.13.1\nplugins:\n%s---\n# Version\n\nThis is a local candidate, not evidence of native acceptance or publication. There is no in-place updater. Back up the old vault and migrate content and custom configuration into a separate fresh copy with conflict review. See `scripts/RELEASE.md`.\n"
+        if os.path.exists(m): plugins[d] = json.load(open(m, encoding="utf-8"))["version"]
+    open(os.path.join(out, "Meta/version.md"), "w", encoding="utf-8").write(
+        "---\ntemplate_version: %s\nbuilt: %s\nrelease_status: candidate\nmin_obsidian: 1.13.1\nlocale: zh-CN\nupstream_commit: ba2c1cf73a8e305c02fa8819f0236f028fd972b3\nplugins:\n%s---\n# 版本信息\n\n这是本地中文候选包，不代表已完成原生验收或公开发布。本版本没有原地更新器。请备份原笔记库，在独立的新副本中迁移内容和自定义配置，逐项检查冲突。参见 `README.zh-CN.md` 和 `scripts/RELEASE.md`。\n"
         % (version, datetime.date.today().isoformat(), "".join('  %s: "%s"\n' % kv for kv in plugins.items())))
 
 def chmod_all(out):
@@ -279,8 +289,8 @@ def manifest(out):
             if f == "MANIFEST.sha256": continue
             p = os.path.join(root, f)
             h = hashlib.sha256(Path(p).read_bytes()).hexdigest()
-            lines.append("%s  %s" % (h, os.path.relpath(p, out)))
-    Path(out, "MANIFEST.sha256").write_text("\n".join(sorted(lines)) + "\n")
+            lines.append("%s  %s" % (h, Path(p).relative_to(out).as_posix()))
+    Path(out, "MANIFEST.sha256").write_text("\n".join(sorted(lines)) + "\n", encoding="utf-8", newline="\n")
 
 def main():
     ap = argparse.ArgumentParser()
@@ -320,9 +330,16 @@ def main():
         # Exclusive reservation prevents replacement of an existing destination.
         destination.mkdir(mode=0o700)
         try:
-            os.replace(out, destination)
+            # Windows cannot replace even an empty destination directory.
+            # Move files only after exclusive reservation of a fresh destination.
+            if os.name == "nt":
+                for child in Path(out).iterdir():
+                    os.replace(child, destination / child.name)
+            else:
+                os.replace(out, destination)
         except Exception:
-            destination.rmdir()
+            if not any(destination.iterdir()):
+                destination.rmdir()
             raise
         print("Verified local candidate", destination)
         if a.zip:
@@ -336,7 +353,7 @@ def main():
                 if z.testzip() is not None: raise ValueError("Archive integrity failed")
             digest = hashlib.sha256(Path(temporary_zip).read_bytes()).hexdigest()
             temporary_sum = os.path.join(staging, "candidate.sha256")
-            Path(temporary_sum).write_text(digest + "  " + archive.name + "\n")
+            Path(temporary_sum).write_text(digest + "  " + archive.name + "\n", encoding="utf-8", newline="\n")
             # Same-filesystem exclusive hard links publish complete files, never partial ZIPs.
             os.link(temporary_zip, archive)
             os.link(temporary_sum, checksum)

@@ -1,20 +1,20 @@
-# Workflow 4: Habit Tracking
+# 工作流 4：习惯追踪
 
-Video: 9:45 to 11:51. "Almost embarrassingly simple."
+视频：9:45 至 11:51。“简单得让人有些不好意思。”
 
-## Data entry
-Checkbox properties in the daily note, prefixed `habit_`: `habit_journal`, `habit_exercise`, `habit_read`, `habit_reading`. Check them as you go or when the Daily Questions Prompt asks at night. No app, no notifications, no streak shame (10:36).
+## 数据录入
+每日笔记里的复选框属性使用 `habit_` 前缀：`habit_journal`、`habit_exercise`、`habit_read`、`habit_reading`。可以随做随勾，也可以在晚间 Daily Questions Prompt 提问时填写。不另装应用，不发通知，也不因连续记录中断而自责（10:36）。
 
-## Dashboard (his "Habit Canvas", 10:47)
-`00 Dashboards/Habit Canvas.md` and the habits widget on the Compass dashboard, both `Meta/views/habits.js`:
-- discovers every `habit_*` checkbox across the daily notes,
-- shows the last N days as a grid (● done, ○ missed, · no note),
-- current streak, best streak, longest break, completion % (of days the habit was tracked), total completions (20:08).
+## 仪表盘（他称为“Habit Canvas”，10:47）
+`00 Dashboards/Habit Canvas.md` 和 Compass 仪表盘中的习惯组件，都使用 `Meta/views/habits.js`：
+- 发现所有每日笔记中的 `habit_*` 复选框。
+- 用网格显示最近 N 天：● 已完成，○ 未完成，· 无笔记。
+- 显示当前连续完成、最佳连续完成、最长中断、完成率（仅计算该习惯有记录的天数）和总完成次数（20:08）。
 
-## Change the habits
-Edit the properties block in `Templates/Daily Note.md`. Nothing else. Track a small set "this season" (10:29); retire habits by removing the property from the template (history stays in old notes and still counts).
+## 修改习惯
+当前模板从 `Meta/Compass Config.md` 的 `habits` 列表生成属性，请修改该列表，无需直接修改 `Templates/Daily Note.md`。追踪少量“当前阶段”的习惯（10:29）；不再追踪某习惯时，从配置列表中移除该项，旧笔记保留历史记录，统计仍会计入。中文显示名称在 `property_labels` 中设置，已有 `habit_*` key 保持不变。
 
-## Practices
-- The habit lives next to the journal entry that explains the miss (11:08). Read them together at the weekly review.
-- "Tracking honestly is more important than tracking perfectly."
-- Do not chase the streak number. The widget shows it because it is informative, not because it is the goal.
+## 使用建议
+- 习惯记录就放在解释那次中断的日记旁边（11:08）。每周回顾时把两者一起读。
+- “如实记录，比完美记录更重要。”
+- 不要追逐连续完成的数字。组件展示它是为了提供信息，不是把它当成目标。

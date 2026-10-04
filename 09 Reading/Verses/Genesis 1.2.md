@@ -9,6 +9,8 @@ tags:
 ---
 # Genesis 1:2
 
-And the earth was without form, and void; and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters.
+*创世记 1:2*
 
-Chapter: [[Genesis 1]] · Previous: [[Genesis 1.1]] · Next: [[Genesis 1.3]]
+地空虚混沌，深渊之上是一片黑暗；神的灵运行在水面上。
+
+所属章节：[[Genesis 1]] · 上一节：[[Genesis 1.1]] · 下一节：[[Genesis 1.3]]

@@ -1,48 +1,48 @@
-# Life OS data definitions
+# Life OS 数据定义
 
-These definitions describe the intended application contract. The implementation and its synthetic tests must agree before a release is accepted.
+以下定义描述应用应遵守的契约。只有实现与合成测试均符合这些定义，才能验收发行版。
 
-## Canonical sources
+## 权威数据来源
 
-Markdown notes and their properties are canonical. Life OS does not maintain a second task or journal database. Existing Compass Config folder and property settings must be resolved consistently across Today, Plan, Review, and Home. A missing configuration is unavailable data, not a zero score or a new set of invented questions.
+Markdown 笔记及其属性是权威来源。Life OS 不维护第二套任务或日记数据库。Today、Plan、Review、Home 必须一致地解析现有 Compass Config 中的文件夹与属性设置。配置缺失表示数据不可用，不表示零分，也不能凭空补出一组问题。
 
-## Effort and check-in coverage
+## 努力评分与填写覆盖率
 
-- An effort score is a finite numeric property from 1 through 10. Booleans, numeric strings, out-of-range numbers, and missing properties are not scores.
-- Daily effort is the arithmetic mean of valid recorded question scores for that day. A date-window average is the mean of the scored daily means; it is not a pooled average of every answer.
-- Unscored days are absent from the average. Show the scored-day count alongside it.
-- Question changes can change what an average means. Do not present comparisons across different question sets as equivalent measurements.
-- Check-in coverage counts valid recorded answers. It is not a grade of a person's life.
+- 努力评分必须是 1 至 10 范围内的有限数值。布尔值、数值字符串、超出范围的数字、缺失属性，都不是有效分数。
+- 每日努力值是当天已记录有效问题评分的算术平均数。某个日期范围的均值，是其中各个有评分日期的每日均值再取平均，而不是把全部答案混合取平均。
+- 未评分日期不计入均值。显示均值时，同时显示有评分的天数。
+- 问题发生变化时，均值代表的含义也可能改变。不要把不同问题集之间的比较呈现为等价测量。
+- 填写覆盖率统计已记录的有效答案，不是对一个人的生活打分。
 
-## Habits
+## 习惯
 
-| Stored value | Meaning | Recorded | Done |
+| 存储值 | 含义 | 已记录 | 已完成 |
 | --- | --- | --- | --- |
-| `true` | Done | Yes | Yes |
-| `false` | Unchecked | Yes | No |
-| Missing or blank | Not recorded | No | No |
-| Other value | Invalid | No | No |
+| `true` | 已完成 | 是 | 是 |
+| `false` | 未勾选 | 是 | 否 |
+| 缺失或空白 | 未记录 | 否 | 否 |
+| 其他值 | 无效 | 否 | 否 |
 
-Habit completion is done divided by recorded entries, with both counts visible. A recorded unchecked answer contributes to check-in coverage, not completion. Never silently count missing days as failed habits.
+习惯完成率等于已完成条目数除以已记录条目数，两个计数都必须可见。已记录但未勾选的答案计入填写覆盖率，不计入完成数。绝不能悄悄把缺失日期当成习惯失败。
 
-## Tasks
+## 任务
 
-The commitment feed is a read-only index of task list items in its disclosed source folders. Markdown examples inside fenced code blocks are not commitments. Operational feeds exclude example-tagged files. Unknown status symbols and unavailable metadata must be disclosed rather than guessed.
+承诺事项列表是对已披露来源文件夹中的任务条目建立的只读索引。围栏代码块里的 Markdown 示例不属于承诺事项。日常任务列表排除带 example 标签的文件。遇到未知状态符号或不可用元数据，应明确披露，而不是猜测。
 
-Due dates, scheduled dates, and priority are separate fields. Sorting must be deterministic. Opening a task should navigate to its source line; it must not mutate the task or its recurrence. Tasks remains the editor for task-specific behavior.
+到期日期、计划日期和优先级是独立字段，排序必须确定。打开任务应定位到其来源行，不能修改任务或其重复规则。任务专属行为仍由 Tasks 编辑器负责。
 
-## Samples and partial data
+## 示例与不完整数据
 
-Sample inclusion in analytics is explicit. It does not make demonstration tasks real commitments. Brain may display clearly identified sample nodes as an exploration aid; its counts are not personal achievement metrics.
+分析是否包含示例，必须由明确选择决定。包含示例不等于把演示任务变成真实承诺。关系图谱可以显示有明确标识的示例节点，帮助探索；其数量并非个人成就指标。
 
-Every source error must preserve the distinction between ready, partial, and unavailable. A partial result with no indexed tasks must not be labeled as proof that no tasks exist.
+所有来源错误都必须保留“就绪”“不完整”“不可用”的区别。一个没有索引到任务的不完整结果，不能被表述为不存在任务的证据。
 
-## Life areas and graph
+## 生活领域与关系图谱
 
-Life-area bars use valid numeric scores from the latest scored retreat in the configured retreat folder. They are self-reported reflection, not clinical or objective measurements.
+生活领域条形图使用配置的复盘文件夹中，最近一次有评分复盘的有效数值。这些是本人报告的反思，不是临床或客观测量。
 
-Brain positions and anatomical lines are decorative. Only resolved vault links form graph edges. Graph counts reflect the view's exclusions and caps, not the entire native Obsidian graph. The graph is not a productivity score.
+关系图谱的位置和脑部轮廓线是装饰。只有笔记库中已解析的链接才能构成图的边。图谱数量反映当前视图的排除规则和显示上限，并不代表完整的 Obsidian 原生关系图。关系图谱不是生产力评分。
 
-## Evidence
+## 证据
 
-Synthetic tests validate logic with invented fixtures outside personal notes. Browser screenshots from those tests are labeled synthetic. They do not prove native Obsidian compatibility, successful AI authentication, backup recovery, or publication readiness.
+合成测试在个人笔记之外使用虚构数据验证逻辑；这类测试的浏览器截图必须标明合成数据。它们不能证明原生 Obsidian 兼容性、AI 认证成功、备份恢复成功或已经具备发布条件。

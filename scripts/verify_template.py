@@ -10,7 +10,7 @@ FORBIDDEN = [r"agricidaniel", r"/var/home", r"/home/[a-z]", r"/Users/", r"C:\\\\
 # Owner-specific names to forbid can be listed one per line in scripts/template/forbidden.local.txt (never shipped).
 _local = os.path.join(os.path.dirname(os.path.abspath(__file__)), "template", "forbidden.local.txt")
 if os.path.exists(_local):
-    FORBIDDEN += [re.escape(l.strip()) for l in open(_local) if l.strip() and not l.startswith("#")]
+    FORBIDDEN += [re.escape(l.strip()) for l in open(_local, encoding="utf-8") if l.strip() and not l.startswith("#")]
 ALLOW_FILES = {"scripts/verify_template.py", "scripts/build_template.py", "scripts/RELEASE.md"}
 SKIP_DIR_PARTS = ("/.obsidian/plugins/",)
 DATE_LINK = re.compile(r"^\d{4}-(\d\d-\d\d|W\d\d|Q\d( Personal Retreat)?)$")
@@ -45,7 +45,7 @@ def main():
         if any(not stat.S_ISREG(os.stat(os.path.join(r, item)).st_mode) for item in fs):
             print("FAIL package contains non-regular files; content scan skipped")
             sys.exit(1)
-        for f in fs: files.append(os.path.relpath(os.path.join(r, f), root))
+        for f in fs: files.append(os.path.relpath(os.path.join(r, f), root).replace(os.sep, "/"))
     files.sort()
     check("no case-insensitive path collisions", len({p.casefold() for p in files}) == len(files))
     manifest_path = os.path.join(root, "MANIFEST.sha256")
@@ -80,7 +80,7 @@ def main():
         check("no forbidden pattern %r" % pat, not hits, ", ".join(hits[:5]))
     # json asserts
     def load(rel):
-        p = os.path.join(root, rel); return json.load(open(p)) if os.path.exists(p) else None
+        p = os.path.join(root, rel); return json.load(open(p, encoding="utf-8")) if os.path.exists(p) else None
     ra = load(".obsidian/plugins/obsidian-local-rest-api/data.json"); check("REST API settings are exactly enableInsecureServer:true", ra == {"enableInsecureServer": True}, "Unexpected settings shape" if ra != {"enableInsecureServer": True} else "")
     ac = load(".obsidian/plugins/agent-client/data.json")
     check("agent-client: no sessions, auto-allow off, no absolute command", ac is not None and ac.get("savedSessions") == [] and ac.get("autoAllowPermissions") is False and not any(str((pa or {}).get("command", "")).startswith("/") for pa in (ac.get("presetAgents") or {}).values()))
@@ -89,6 +89,10 @@ def main():
     qa = load(".obsidian/plugins/quickadd/data.json"); check("quickadd: no AI keys, online off", qa is not None and qa.get("disableOnlineFeatures") is True and all((p or {}).get("apiKey", "") == "" for p in (qa.get("ai", {}) or {}).get("providers", []) or []))
     cp = load(".obsidian/core-plugins.json"); check("core-plugins: sync off, webviewer on, bases on", cp is not None and cp.get("sync") is False and cp.get("webviewer") is True and cp.get("bases") is True)
     app = load(".obsidian/app.json"); check("app.json: new files in current folder", app is not None and app.get("newFileLocation") == "current")
+    appearance = load(".obsidian/appearance.json")
+    check("appearance enables only the first-party lifeos snippet", appearance == {"enabledCssSnippets": ["lifeos"]})
+    snippets = [rel for rel in files if rel.startswith(".obsidian/snippets/")]
+    check("only the first-party lifeos snippet is packaged", snippets == [".obsidian/snippets/lifeos.css"])
     # plugin folders
     ids = load(".obsidian/community-plugins.json") or []
     for pid in ids:
@@ -96,22 +100,28 @@ def main():
         check("plugin %s has main.js, manifest.json, LICENSE" % pid, all(os.path.exists(os.path.join(d, f)) for f in ["main.js", "manifest.json", "LICENSE"]))
     lifeos_verify = os.path.join(root, "scripts", "verify_life_os_app.mjs")
     if os.path.exists(lifeos_verify):
-        r = subprocess.run(["node", lifeos_verify, root], capture_output=True, text=True)
+        r = subprocess.run(["node", lifeos_verify, root], capture_output=True, text=True, encoding="utf-8")
         check("Life OS application gate", r.returncode == 0, (r.stdout + r.stderr)[-500:])
     else:
         check("Life OS application gate", False, "scripts/verify_life_os_app.mjs missing")
     assistant_verify = os.path.join(root, "scripts", "verify_assistant_contracts.mjs")
     if os.path.exists(assistant_verify):
-        r = subprocess.run(["node", assistant_verify, root], capture_output=True, text=True)
+        r = subprocess.run(["node", assistant_verify, root], capture_output=True, text=True, encoding="utf-8")
         check("Assistant context and send gate", r.returncode == 0, (r.stdout + r.stderr)[-500:])
     else:
         check("Assistant context and send gate", False, "Assistant contract verifier missing")
+    localized_verify = os.path.join(root, "scripts", "verify_localized_views.mjs")
+    if os.path.isfile(localized_verify):
+        r = subprocess.run(["node", localized_verify, root], capture_output=True, text=True, encoding="utf-8")
+        check("Localized views and templates gate", r.returncode == 0, (r.stdout + r.stderr)[-500:])
+    else:
+        check("Localized views and templates gate", False, "scripts/verify_localized_views.mjs missing")
     # notices match manifests
     notices = texts.get("THIRD_PARTY_NOTICES.md", "")
     for pid in ids:
         m = os.path.join(root, ".obsidian/plugins", pid, "manifest.json")
         if os.path.exists(m):
-            v = json.load(open(m))["version"]; check("notices list %s %s" % (pid, v), ("| %s | %s |" % (pid, v)) in notices)
+            v = json.load(open(m, encoding="utf-8"))["version"]; check("notices list %s %s" % (pid, v), ("| %s | %s |" % (pid, v)) in notices)
     # referenced paths resolve
     def exists(rel): return os.path.exists(os.path.join(root, rel))
     tp = load(".obsidian/plugins/templater-obsidian/data.json") or {}
@@ -136,9 +146,9 @@ def main():
             t = texts.get(rel, ""); fm = re.match(r"^---\n(.*?)\n---", t, re.S)
             check("user-folder note tagged example: %s" % rel, bool(fm) and re.search(r"^\s*-\s*example\s*$", fm.group(1), re.M) is not None)
     cfg = texts.get("Meta/Compass Config.md", ""); check("config birthdate empty", re.search(r"^birthdate:\s*$", cfg, re.M) is not None)
-    check("Life Theme is template text", "Replace this line with your life theme" in texts.get("03 Planning/Life Theme.md", ""))
-    check("Core Values is template text", "**Value one**" in texts.get("03 Planning/Core Values.md", ""))
-    check("wiki log empty", re.sub(r"^---.*?---\n", "", texts.get("wiki/log.md", ""), flags=re.S).strip().endswith("Newest completed operations appear first."))
+    check("Life Theme is template text", "用你的人生主题替换本行" in texts.get("03 Planning/Life Theme.md", ""))
+    check("Core Values is template text", "**价值观一**" in texts.get("03 Planning/Core Values.md", ""))
+    check("wiki log empty", re.sub(r"^---.*?---\n", "", texts.get("wiki/log.md", ""), flags=re.S).strip().endswith("最新完成的操作显示在最前面。"))
     plan_body = re.sub(r"```.*?```", "", texts.get("09 Reading/Reading Plan.md", ""), flags=re.S)
     check("reading plan has no tasks", not re.search(r"^- \[ \]", plan_body, re.M))
     for rel, t in texts.items():
@@ -160,6 +170,8 @@ def main():
     for rel, t in texts.items():
         if not rel.endswith(".md") or rel.startswith("Guide/Source") or rel.startswith("Templates/"): continue
         body = re.sub(r"```.*?```", "", t, flags=re.S); body = re.sub(r"`[^`\n]*`", "", body); body = re.sub(r"<%.*?%>", "", body, flags=re.S)
+        # Markdown tables escape the alias separator; it is not part of the target.
+        body = body.replace(r"\|", "|")
         for m in re.finditer(r"\[\[([^\]\|#]*)(?:#([^\]\|]*))?(?:\|[^\]]*)?\]\]", body):
             tgt = m.group(1).strip().rstrip("/"); frag = (m.group(2) or "").strip()
             base = tgt.split("/")[-1] if tgt else os.path.basename(rel)[:-3]
@@ -175,7 +187,7 @@ def main():
     for rel in files:
         if rel.startswith("Meta/views/") and rel.endswith(".js"):
             src = texts.get(rel, "")
-            r = subprocess.run(["node", "-e", "new (Object.getPrototypeOf(async function(){}).constructor)('dv','input','moment','app','Notice', require('fs').readFileSync(process.argv[1],'utf8'))", os.path.join(root, rel)], capture_output=True, text=True)
+            r = subprocess.run(["node", "-e", "new (Object.getPrototypeOf(async function(){}).constructor)('dv','input','moment','app','Notice', require('fs').readFileSync(process.argv[1],'utf8'))", os.path.join(root, rel)], capture_output=True, text=True, encoding="utf-8")
             check("js syntax %s" % rel, r.returncode == 0, r.stderr[-200:])
     # templater property generators must produce valid property lines (config path and fallback)
     sim = r"""
@@ -187,7 +199,7 @@ for(const p of process.argv.slice(1)){const s=fs.readFileSync(p,'utf8');const m=
 console.log('ok');"""
     tpls = [os.path.join(root, t) for t in ["Templates/Daily Note.md", "Templates/Personal Retreat.md"] if exists(t)]
     if tpls:
-        r = subprocess.run(["node", "-e", sim] + tpls, capture_output=True, text=True)
+        r = subprocess.run(["node", "-e", sim] + tpls, capture_output=True, text=True, encoding="utf-8")
         check("templater property generators produce valid properties", r.returncode == 0 and "ok" in r.stdout, (r.stdout + r.stderr)[-200:])
     total = sum(os.path.getsize(os.path.join(root, f)) for f in files)
     check("total size under 20 MB", total < 20e6, "%.1f MB" % (total / 1e6))

@@ -9,22 +9,26 @@ tags:
   - index
 ---
 
-# Wiki Index
+# 知识库索引
 
-This catalog is updated by completed knowledge operations.
+完成知识整理操作后，此目录会随之更新。
 
 ## Sources
+**来源**
 
-- No sources indexed yet.
+- 尚未索引来源。
 
 ## Concepts
+**概念**
 
-- No concepts indexed yet.
+- 尚未索引概念。
 
 ## Entities
+**实体**
 
-- No entities indexed yet.
+- 尚未索引实体。
 
 ## Questions
+**问题**
 
-- No questions indexed yet.
+- 尚未索引问题。

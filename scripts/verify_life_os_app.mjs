@@ -217,9 +217,9 @@ class ItemView extends Component {
   }
 }
 
-class Modal extends Component {
+// Obsidian Modal does not inherit Component or its registerDomEvent helper.
+class Modal {
   constructor(app) {
-    super();
     this.app = app;
     this.contentEl = new FakeElement();
     Modal.lastOpened = this;
@@ -258,12 +258,14 @@ class TFile {
   }
 }
 
-class Notice {}
+class Notice {
+  constructor(message) { Notice.lastMessage = message; }
+}
 
 try {
   const moduleBox = { exports: {} };
   vm.runInNewContext(
-    source,
+    `${source}\nmodule.i18nForTest = { t, displayValue, formatDisplayDate };`,
     {
       module: moduleBox,
       exports: moduleBox.exports,
@@ -307,6 +309,7 @@ try {
                   "gggg-[W]ww": "2026-W37",
                   "YYYY-[Q]Q": "2026-Q3",
                   "[Week] ww": "Week 37",
+                  "[第] ww [周]": "第 37 周",
                   "D MMM": "9 Sep",
                 };
                 return values[format] || "2026-09-09";
@@ -320,6 +323,27 @@ try {
     },
     { filename: mainPath }
   );
+
+  const { t, displayValue, formatDisplayDate } = moduleBox.i18nForTest;
+  const terminology = {
+    Home: "首页", Today: "今日", Plan: "规划", Focus: "聚焦", Review: "复盘",
+    Projects: "项目", People: "人际", Create: "创作", Library: "资料库", Brain: "关系图谱",
+    AI: "AI", Capture: "快速捕获", Journal: "日记", Habits: "习惯",
+    "Daily questions": "每日问题", Retreat: "季度复盘", "Task triage": "任务整理",
+    Setup: "设置向导", Compass: "Compass", "Life OS": "Life OS",
+  };
+  check("zh-CN UI translation and unknown English fallback",
+    Object.entries(terminology).every(([source, expected]) => t(source) === expected) &&
+      t("Untranslated interface text") === "Untranslated interface text" &&
+      t("constructor") === "constructor");
+  check("named parameters follow Chinese sentence order",
+    t("Showing {shown} of {total} matching tasks.", { shown: 2, total: 7 }) === "显示 2 / 7 项匹配任务。" &&
+      t("Untranslated {value}", { value: 3 }) === "Untranslated 3");
+  check("data enums are translated for display with custom-value fallback",
+    displayValue("completed") === "已完成" && displayValue("source") === "来源" &&
+      displayValue("custom-state") === "custom-state" && displayValue("constructor") === "constructor");
+  check("display dates use Chinese without changing canonical ISO dates",
+    formatDisplayDate("2026-09-09", { month: "long", day: "numeric" }) === "9月9日");
 
   const fakeFiles = [
     new TFile("04 Projects/Example.md"),
@@ -444,6 +468,12 @@ try {
   const plugin = new LifeOSPlugin();
   plugin.app = fakeApp;
   await plugin.onload();
+  const executeCommand = fakeApp.commands.executeCommandById;
+  fakeApp.commands.executeCommandById = () => false;
+  plugin.runCommand("missing-plugin:command", "测试操作");
+  check("unavailable command notice interpolates its translated action",
+    Notice.lastMessage === "测试操作不可用。请检查相关插件是否已启用。");
+  fakeApp.commands.executeCommandById = executeCommand;
   check("view registered", plugin.viewType === "life-os-home", plugin.viewType);
   check("Brain view registered", plugin.views.has("life-os-brain"));
   const commandIds = new Set((plugin.commands || []).map((command) => command.id));
@@ -474,6 +504,20 @@ try {
 
   const view = plugin.viewFactory(fakeLeaf);
   await view.onOpen();
+  const originalConfig = metadata.get("Meta/Compass Config.md");
+  metadata.set("Meta/Compass Config.md", { ...originalConfig, property_labels: { habit_journal: "晚间日记", habit_custom: "自定义习惯" } });
+  check("property display labels preserve configured keys and support custom labels",
+    view.formatPropertyLabel("habit_journal") === "晚间日记" &&
+      view.formatPropertyLabel("habit_custom") === "自定义习惯" &&
+      view.formatPropertyLabel("wheel_health") === "健康" &&
+      view.formatPropertyLabel("habit_unmapped") === "Unmapped" &&
+      JSON.stringify(view.getHabitKeys(view.getConfigFrontmatter())) === JSON.stringify(originalConfig.habits),
+    "Labels affect display only");
+  metadata.set("Meta/Compass Config.md", originalConfig);
+  const boardFile = new TFile("04 Projects/Projects Board.md");
+  check("translated file titles preserve the original title used for routing",
+    view.getDisplayFileTitle(boardFile) === "项目看板" && view.getFileTitle(boardFile) === "Projects Board");
+  check("localized view declares its language", view.contentEl.options.attr?.lang === "zh-CN");
   const screens = [
     "home",
     "today",
@@ -529,7 +573,7 @@ try {
     }
     if (screen === "today") {
       todayHasPropertyValues =
-        treeHasText(view.contentEl, "8/10") && treeHasText(view.contentEl, "Done");
+        treeHasText(view.contentEl, "8/10") && treeHasText(view.contentEl, "已完成");
     }
   }
   check("all application screens render", emptyScreens.length === 0, emptyScreens.join(", "));
@@ -605,7 +649,7 @@ try {
     "task feed exposes partial index coverage",
     treeHasText(
       view.contentEl,
-      "4 open, 1 unreadable, 1 metadata pending, 1 unresolved status, 1 sample excluded"
+      "4 项未完成, 1 个文件无法读取, 1 个文件的元数据待处理, 1 个状态无法识别, 已排除 1 个示例"
     )
   );
   check(
@@ -619,23 +663,23 @@ try {
   view.render();
   check(
     "permission status reports observable policy without enforcement claim",
-    treeHasText(view.contentEl, "Manual prompts") &&
-      treeHasText(view.contentEl, "Client setting is off. This reports policy, not enforcement.") &&
+    treeHasText(view.contentEl, "逐次询问") &&
+      treeHasText(view.contentEl, "客户端自动允许设置已关闭。此处只报告策略，不保证强制执行。") &&
       !treeHasText(view.contentEl, "Required for every write")
   );
   pluginInstances.get("agent-client").settings.autoAllowPermissions = true;
   view.render();
   check(
     "permission status warns when auto-allow is enabled",
-    treeHasText(view.contentEl, "Auto-allow on") &&
-      treeHasText(view.contentEl, "Client may auto-approve requests. This reports policy, not enforcement.")
+    treeHasText(view.contentEl, "已开启自动允许") &&
+      treeHasText(view.contentEl, "客户端可能自动批准请求。此处只报告策略，不保证强制执行。")
   );
   delete pluginInstances.get("agent-client").settings.autoAllowPermissions;
   view.render();
   check(
     "permission status remains unknown when setting is unobservable",
-    treeHasText(view.contentEl, "Unknown") &&
-      treeHasText(view.contentEl, "Permission setting was not observable. No enforcement claim.")
+    treeHasText(view.contentEl, "未知") &&
+      treeHasText(view.contentEl, "无法读取权限设置，无法确认审批是否强制执行。")
   );
   pluginInstances.get("agent-client").settings.autoAllowPermissions = false;
 
@@ -653,7 +697,7 @@ try {
     "Today rejects boolean effort scores",
     strictToday.questionRecorded === 0 &&
       strictToday.questions[0]?.state === "invalid" &&
-      strictToday.questions[0]?.display === "Invalid value"
+      strictToday.questions[0]?.display === "数值无效"
   );
   check(
     "Today distinguishes unchecked, missing, and invalid habits",
@@ -662,7 +706,7 @@ try {
       strictToday.habits.map((habit) => habit.state).join(",") ===
         "unchecked,missing,invalid" &&
       strictToday.habits.map((habit) => habit.display).join(",") ===
-        "Unchecked,Not recorded,Invalid value"
+        "未勾选,未记录,数值无效"
   );
   const coverage = view.summarizeDailyProperties(
     {
@@ -757,12 +801,42 @@ try {
   );
 
   plugin.openCapture();
+  const capture = Modal.lastOpened;
+  const captureChoices = element => [
+    ...(element.options?.cls === "life-os-capture-choice" ? [element] : []),
+    ...element.children.flatMap(captureChoices),
+  ];
+  const originalChoices = captureChoices(capture.contentEl);
   check(
-    "capture modal renders three action groups",
-    (Modal.lastOpened?.contentEl.children || []).filter((child) =>
+    "capture modal renders three action groups and all sixteen choices",
+    (capture.contentEl.children || []).filter((child) =>
       treeHasClass(child, "life-os-capture-section")
-    ).length === 3
+    ).length === 3 && originalChoices.length === 16
   );
+  capture.close();
+  const closedEmpty = capture.contentEl.children.length === 0;
+  capture.open();
+  const reopenedChoices = captureChoices(capture.contentEl);
+  check("capture close clears its DOM and reopen creates fresh controls",
+    closedEmpty && reopenedChoices.length === 16 && reopenedChoices.every(button => !originalChoices.includes(button)));
+  const expectedCaptures = [
+    "lifeos-journal", "lifeos-win", "lifeos-gratitude", "lifeos-task",
+    "lifeos-project-idea", "lifeos-newsletter-idea", "lifeos-video-idea", "lifeos-article-idea",
+    "lifeos-new-project", "lifeos-new-person", "lifeos-new-newsletter", "lifeos-new-video",
+    "lifeos-new-article", "lifeos-new-course-lesson", "lifeos-new-book", "lifeos-new-study-note",
+  ].map(id => "quickadd:choice:" + id);
+  const captureCalls = [];
+  const runCaptureCommand = plugin.runCommand;
+  plugin.runCommand = command => { captureCalls.push(command); return true; };
+  let closesAfterChoice = true;
+  for (let index = 0; index < expectedCaptures.length; index++) {
+    capture.open();
+    captureChoices(capture.contentEl)[index].handlers.click();
+    closesAfterChoice &&= capture.contentEl.children.length === 0;
+  }
+  plugin.runCommand = runCaptureCommand;
+  check("every capture choice dispatches exactly once and closes after repeated opening",
+    closesAfterChoice && JSON.stringify(captureCalls) === JSON.stringify(expectedCaptures));
   fakeLeaf.view = view;
   fakeApp.workspace.getLeavesOfType = () => [fakeLeaf];
   await plugin.activateView("today");
@@ -785,12 +859,12 @@ try {
   view.render();
   const findText = (element, text) => element.options?.text === text ? element :
     element.children.map((child) => findText(child, text)).find(Boolean);
-  check("Home keeps full analytics in Review", !findText(view.contentEl, "7 days") && !!findText(view.contentEl, "Explore Review"));
+  check("Home keeps full analytics in Review", !findText(view.contentEl, "7 天") && !!findText(view.contentEl, "查看复盘"));
   view.activeScreen = "review";
   view.render();
-  findText(view.contentEl, "7 days").handlers.click();
+  findText(view.contentEl, "7 天").handlers.click();
   check("chart range control changes aggregation window", view.getAnalytics().days.length === 7);
-  findText(view.contentEl, "Include samples").handlers.click();
+  findText(view.contentEl, "包含示例").handlers.click();
   check("sample control changes state", view.includeExamples === true);
   view.analyticsDays = 30;
   view.includeExamples = false;

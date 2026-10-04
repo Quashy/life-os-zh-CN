@@ -3,13 +3,16 @@ reviewed:
 tags:
   - planning
 ---
-A personal mission statement: one or two sentences that encapsulate what your life is about. Reviewed every 90 days during the personal retreat. Embedded in every daily note and on the [[Compass Dashboard]] so it is never more than a glance away.
+用一两句话概括你希望如何度过人生。每 90 天在季度复盘时回顾。人生主题会嵌入每篇日记和 [[Compass Dashboard|Compass 仪表盘]]，方便随时查看。
 
 ## Theme
-> Replace this line with your life theme. Example shape: "Help people build systems that free them to do work that matters, and be fully present for the people I love while I do it."
+**人生主题**
+> 用你的人生主题替换本行。例如：「帮助他人建立能专注于重要工作的系统，同时全心陪伴我所爱的人。」
 
 ## Why these words
+**选择这些词的原因**
 -
 
 ## Review log
-- <!-- YYYY-MM-DD: still resonates / changed X -->
+**回顾记录**
+- <!-- YYYY-MM-DD：仍然贴合 / 调整了哪些内容 -->

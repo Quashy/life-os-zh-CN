@@ -1,6 +1,6 @@
-Projects are notes in `04 Projects/` with a `status`, `area`, `quarter`, and `due` property. Tasks belong to a project via `#project/<slug>`.
+项目笔记放在 `04 Projects/`，使用 `status`（状态）、`area`（领域）、`quarter`（季度）和 `due`（截止日期）属性。任务通过 `#project/<slug>` 标签关联项目。
 
-## Active
+## 进行中
 ```dataviewjs
 const cfg = dv.page("Meta/Compass Config") || {};
 const folder = cfg.projects_folder || "04 Projects";
@@ -15,19 +15,19 @@ const rows = projects.map(p => {
   const pct = open + done ? Math.round(100 * done / (open + done)) : 0;
   return [p.file.link, p.status, p.area ?? "", p.quarter ?? "", p.due ?? "", open, `${pct}%`];
 });
-dv.table(["Project", "Status", "Area", "Quarter", "Due", "Open tasks", "Progress"], rows);
+dv.table(["项目", "状态", "领域", "季度", "截止日期", "未完成任务", "进度"], rows);
 ```
 
-## By quarter
+## 按季度
 ```dataview
-TABLE WITHOUT ID file.link AS Project, status, area, due
+TABLE WITHOUT ID file.link AS "项目", status AS "状态", area AS "领域", due AS "截止日期"
 FROM "04 Projects"
 WHERE type = "project"
 GROUP BY quarter
 SORT quarter DESC
 ```
 
-## Done
+## 已完成
 ```dataview
 LIST
 FROM "04 Projects"

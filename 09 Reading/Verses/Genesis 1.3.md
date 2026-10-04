@@ -9,6 +9,8 @@ tags:
 ---
 # Genesis 1:3
 
-And God said, Let there be light: and there was light.
+*创世记 1:3*
 
-Chapter: [[Genesis 1]] · Previous: [[Genesis 1.2]]
+神说：“要有光。”于是就有了光。
+
+所属章节：[[Genesis 1]] · 上一节：[[Genesis 1.2]]

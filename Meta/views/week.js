@@ -6,7 +6,7 @@ const DQ = cfg.dq_prefix || "dq_";
 const HB = cfg.habit_prefix || "habit_";
 const weekName = (input && input.week) || moment().format("gggg-[W]ww");
 const start = moment(weekName, "gggg-[W]ww").startOf("week");
-const label = (k, pre) => k.slice(pre.length).replace(/[_-]+/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+const label = (k, pre) => { const value = cfg.property_labels?.[k]; return typeof value === "string" && value.trim() ? value.trim() : k.slice(pre.length).replace(/[_-]+/g, " ").replace(/\b\w/g, c => c.toUpperCase()); };
 
 const days = [];
 for (let i = 0; i < 7; i++) days.push(start.clone().add(i, "day"));
@@ -18,14 +18,15 @@ for (const d of days) {
   for (const k of Object.keys(p.file.frontmatter || {})) { if (k.startsWith(DQ)) dqKeys.add(k); if (k.startsWith(HB)) hbKeys.add(k); }
 }
 const dqs = [...dqKeys].sort(), hbs = [...hbKeys].sort();
-const header = ["Day", ...dqs.map(k => label(k, DQ)), "Habits"];
+const header = ["日期", ...dqs.map(k => label(k, DQ)), "习惯"];
 const rows = [];
 const sums = {}, counts = {};
 for (const d of days) {
   const name = d.format("YYYY-MM-DD");
   const p = pagesByName.get(name);
   const fm = p ? (p.file.frontmatter || {}) : null;
-  const cells = [p ? dv.fileLink(p.file.path, false, d.format("ddd D")) : d.format("ddd D")];
+  const dayLabel = `${["周日", "周一", "周二", "周三", "周四", "周五", "周六"][d.day()]} ${d.date()}日`;
+  const cells = [p ? dv.fileLink(p.file.path, false, dayLabel) : dayLabel];
   for (const k of dqs) {
     const v = fm && fm[k] !== null && fm[k] !== "" && !isNaN(Number(fm[k])) ? Number(fm[k]) : null;
     if (v !== null) { sums[k] = (sums[k] || 0) + v; counts[k] = (counts[k] || 0) + 1; }
@@ -35,6 +36,6 @@ for (const d of days) {
   cells.push(fm ? `${hit}/${hbs.length}` : "");
   rows.push(cells);
 }
-rows.push(["**Average**", ...dqs.map(k => counts[k] ? (sums[k] / counts[k]).toFixed(1) : ""), ""]);
-if (dqs.length === 0 && hbs.length === 0) dv.paragraph(`No daily notes with ${DQ}* or ${HB}* properties found for ${weekName} yet.`);
+rows.push(["**平均分**", ...dqs.map(k => counts[k] ? (sums[k] / counts[k]).toFixed(1) : ""), ""]);
+if (dqs.length === 0 && hbs.length === 0) dv.paragraph(`${weekName} 尚无包含 ${DQ}* 或 ${HB}* 属性的日记。`);
 else dv.table(header, rows);

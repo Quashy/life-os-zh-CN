@@ -10,14 +10,26 @@ tags:
   - example
 ---
 ## Passages
+
+*经文段落*
+
 - [[Genesis 1.1]], [[Genesis 1.3]]
 
 ## Sketch note
-(attach the sketch note image here)
+
+*手绘笔记*
+
+（在这里附上手绘笔记图片）
 
 ## Main points
-1. Creation was intentional ([[Genesis 1.1]]).
-2. Light before the sun: order before detail ([[Genesis 1.3]]).
+
+*要点*
+
+1. 创造具有明确的意图（[[Genesis 1.1]]）。
+2. 先有光，后有太阳：先建立秩序，再安排细节（[[Genesis 1.3]]）。
 
 ## Application
-- Start the week by deciding what matters before deciding what to do. See [[Creation]].
+
+*应用*
+
+- 一周开始时，先确定什么重要，再决定要做什么。参见 [[Creation]]。

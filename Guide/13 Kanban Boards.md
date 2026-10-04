@@ -1,23 +1,23 @@
-Plugin: Kanban 2.0.51 (`obsidian-kanban`, repo now at https://github.com/community-archive/obsidian-kanban, formerly mgmeyers). Boards are plain markdown: each `## Heading` is a lane, each `- [ ]` line is a card, so every board stays searchable, linkable, and readable without the plugin.
+插件：Kanban 2.0.51（`obsidian-kanban`，仓库现位于 https://github.com/community-archive/obsidian-kanban，原为 mgmeyers）。看板是纯 Markdown：每个 `## Heading` 是一列，每个 `- [ ]` 行是一张卡片，因此即使没有插件，看板仍可搜索、链接和阅读。
 
-## Boards in this vault
-| Board | Lanes | Feeds from |
+## 本笔记库中的看板
+| 看板 | 列 | 内容来源 |
 | --- | --- | --- |
-| `04 Projects/Projects Board` | Ideas → This quarter → In progress → Waiting on someone → Done | QuickAdd **Project idea**; cards link to project notes |
-| `06 Writing/Newsletters/Newsletter Board` | Backlog → Outlining → Drafting → Editing → Ready to publish → Published | QuickAdd **Newsletter idea** |
-| `06 Writing/YouTube Scripts/YouTube Board` | same | QuickAdd **Video idea** |
-| `06 Writing/Articles/Article Board` | same | QuickAdd **Article idea** |
-| `06 Writing/Course Content/Course Board` | same | manual |
+| `04 Projects/Projects Board` | Ideas（想法）→ This quarter（本季度）→ In progress（进行中）→ Waiting on someone（等待他人）→ Done（完成） | QuickAdd **Project idea**（项目想法）；卡片链接到项目笔记 |
+| `06 Writing/Newsletters/Newsletter Board` | Backlog（待办）→ Outlining（提纲）→ Drafting（草稿）→ Editing（编辑）→ Ready to publish（待发布）→ Published（已发布） | QuickAdd **Newsletter idea**（邮件通讯想法） |
+| `06 Writing/YouTube Scripts/YouTube Board` | 同上 | QuickAdd **Video idea**（视频想法） |
+| `06 Writing/Articles/Article Board` | 同上 | QuickAdd **Article idea**（文章想法） |
+| `06 Writing/Course Content/Course Board` | 同上 | 手动添加 |
 
-## How it is wired
-- Global defaults in `.obsidian/plugins/obsidian-kanban/data.json`: dates typed with `@` (for example `@{2026-09-30}`) link to the daily note, relative dates shown, archive stamps the date.
-- Each board's own settings (the `%% kanban:settings %%` block at the bottom) set **New note folder** and **Note template**, so "convert card to note" from the Newsletter board creates a note in `06 Writing/Newsletters` from `Templates/Newsletter.md`.
-- `Meta/views/boards.js` reads every note with `kanban-plugin` in its properties and shows lane counts. It is on the [[Compass Dashboard]] (compact) and in full on [[Boards]]. Lanes named in `board_done_lanes` (config) count as finished.
+## 配置如何连接
+- 全局默认值位于 `.obsidian/plugins/obsidian-kanban/data.json`：用 `@` 输入的日期（如 `@{2026-09-30}`）会链接到每日笔记；显示相对日期；归档时写入日期。
+- 每个看板自己的设置位于底部 `%% kanban:settings %%` 块，其中设置 **New note folder**（新笔记文件夹）和 **Note template**（笔记模板）。因此，在 Newsletter 看板上把卡片转换为笔记，会用 `Templates/Newsletter.md` 在 `06 Writing/Newsletters` 中创建笔记。
+- `Meta/views/boards.js` 读取所有属性中带 `kanban-plugin` 的笔记，显示各列数量。[[Compass Dashboard|Compass 仪表盘]]上使用紧凑视图，[[Boards|看板总览]]显示完整视图。配置 `board_done_lanes` 列出的列名，统计为已完成。
 
-## Practices (from the video, 17:42)
-- One board per type of work, in that type's folder. Capture to the backlog; drag left to right; the card reaches Published only when the thing is actually out.
-- Cards are pointers. The work lives in the note the card links to (task notes), not in the card text.
-- Archive done cards at the retreat so the board stays a picture of now.
+## 使用建议（来自视频，17:42）
+- 每种工作类型一个看板，放在对应类型的文件夹里。先捕获到待办栏，再从左向右拖动；只有作品真正发布后，卡片才进入 Published。
+- 卡片是入口。实际工作放在卡片链接的笔记中，也就是任务笔记，而不是卡片文字里。
+- 季度复盘时归档已完成卡片，使看板保持对当前状态的清晰呈现。
 
-## Maintenance note for the template
-The plugin's README says it is looking for new maintainers. It works on current Obsidian and the format is plain markdown, so the risk is low: if it ever breaks, the boards remain readable lists and can be moved to another board plugin (e.g. a Bases board view) without data loss.
+## 模板维护说明
+该插件的 README 表示正在寻找新维护者。它能在当前 Obsidian 中运行，格式又是纯 Markdown，因此风险较低：即使将来插件失效，看板仍是可读的列表，可以迁移到其他看板插件，例如 Bases 看板视图，而不丢失数据。

@@ -9,6 +9,6 @@ tags:
   - log
 ---
 
-# Wiki Log
+# 知识库日志
 
-Newest completed operations appear first.
+最新完成的操作显示在最前面。

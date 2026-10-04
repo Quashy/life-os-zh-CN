@@ -9,30 +9,40 @@ sources: []
 tags:
   - writing/course
 ---
-Board: [[Course Board]]
+看板：[[Course Board|课程看板]]
 
 ```agent
 type: button
-text: "Work on this piece"
+text: "协助撰写内容"
 prompt: "Read Prompts/10 Writing Pipeline.md with vault_read and follow its Prompt section for the note I have open (or the current period if none applies)."
 viewType: right-pane
+autoSend: false
 ```
 ```agent
 type: button
-text: "SEO pre-publish audit"
+text: "检查发布前 SEO"
 prompt: "Read Prompts/11 SEO Pre-publish Audit.md with vault_read and follow its Prompt section for the note I have open (or the current period if none applies)."
 viewType: right-pane
+autoSend: false
 ```
 
 ## Learning outcome
-After this lesson the student can:
+<!-- zh-CN heading -->
+**学习目标**
+完成本课后，学习者能够：
 - 
 
 ## Script / content
+<!-- zh-CN heading -->
+**讲稿与内容**
 
 
 ## Exercise
+<!-- zh-CN heading -->
+**练习**
 
 
 ## Resources
+<!-- zh-CN heading -->
+**资源**
 - 

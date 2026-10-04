@@ -1,78 +1,78 @@
-# Life OS Application
+# Life OS 应用
 
-Life OS is the native application layer above the Compass vault. It makes the vault feel like one coherent operating system while Markdown and frontmatter remain the canonical data. There is no second database and no cloud dependency.
+Life OS 是 Compass 笔记库之上的原生应用层。它把笔记库呈现为连贯的生活操作系统，同时保留 Markdown 和 frontmatter 作为权威数据来源，不另建数据库，也不依赖云端。
 
-## Open it
+## 打开应用
 
-Life OS opens automatically after Obsidian finishes loading the vault. Use `Ctrl/Cmd+Shift+L`, the compass ribbon icon, or run **Life OS: Open Life OS home** to reopen it. `Ctrl/Cmd+Shift+C` opens universal Capture. Every module also has a **Life OS: Open...** command that can be assigned a hotkey in Obsidian. If the application is missing after an upgrade, run **Reload app without saving** once.
+Obsidian 完成笔记库加载后，Life OS 会自动打开。可通过 `Ctrl/Cmd+Shift+L`、侧边栏指南针图标，或 **Life OS: Open Life OS home** 命令重新打开。`Ctrl/Cmd+Shift+C` 打开统一捕获。每个模块也有 **Life OS: Open...** 命令，可在 Obsidian 中绑定快捷键。升级后如果看不到应用，执行一次 **Reload app without saving**（不保存并重新加载应用）。
 
-## Application map
+## 应用导航
 
-| Module | Purpose | Canonical data |
+| 模块 | 用途 | 权威数据来源 |
 | --- | --- | --- |
-| Home | Fast orientation, capture, planning, and AI entry | dashboard and workflow links |
-| Today | Daily questions, habits, journal, wins, gratitude, tasks | today's daily-note properties and QuickAdd |
-| Plan | Daily, weekly, quarterly, retreat, projects, ideal week | periodic and planning notes |
-| Focus | Commitments competing for attention | Tasks and project dashboards |
-| Review | Evidence across days and quarters | daily properties and periodic reviews |
-| Projects | Active outcomes and project ideas | `04 Projects/` and its Kanban board |
-| People | Relationships and discussion queues | `05 People/` and `#discuss` tasks |
-| Create | Newsletter, video, article, and course pipelines | `06 Writing/` boards |
-| Library | Reading, books, sources, and connected notes | `07 Library/` and `09 Reading/` |
-| AI | Retrieval, triage, drafting, and setup | Assistant dashboard, prompts, Agent Client, MCP |
+| 首页（Home） | 快速了解当前状态、捕获、规划和 AI 入口 | 仪表盘与工作流链接 |
+| 今日（Today） | 每日问题、习惯、日记、收获、感恩、任务 | 今日笔记属性和 QuickAdd |
+| 规划（Plan） | 每日、每周、每季度、复盘、项目、理想的一周 | 周期笔记与规划笔记 |
+| 聚焦（Focus） | 需要分配注意力的承诺事项 | Tasks 与项目仪表盘 |
+| 复盘（Review） | 跨日与跨季度的记录依据 | 每日属性和周期回顾 |
+| 项目（Projects） | 当前推进的成果与项目想法 | `04 Projects/` 及其 Kanban 看板 |
+| 人际（People） | 人际关系与待讨论队列 | `05 People/` 与 `#discuss` 任务 |
+| 创作（Create） | 邮件通讯、视频、文章和课程流程 | `06 Writing/` 中的看板 |
+| 资料库（Library） | 阅读、书籍、来源材料和关联笔记 | `07 Library/` 与 `09 Reading/` |
+| AI | 检索、整理、起草和设置 | Assistant 仪表盘、提示词、Agent Client、MCP |
 
-## Brain graph
+## 关系图谱（Brain）
 
-Choose Brain in the Life OS navigation or run **Life OS: Open Life OS Brain**. The view places notes in five colored regions inside a rotatable brain shape. Drag to rotate, scroll to zoom, or use arrow keys and plus/minus while the canvas has focus. Search or use the region filters, select a node, then open it or browse its linked notes in the side panel. Standard graph opens Obsidian's original Graph view.
+在 Life OS 导航中选择关系图谱（Brain），或运行 **Life OS: Open Life OS Brain**。视图将笔记放在可旋转脑形中的五个彩色区域。拖动旋转，滚动缩放；画布获得焦点时也可用方向键和加减键操作。通过搜索或区域筛选选择节点，然后打开它，或在侧面板浏览关联笔记。Standard graph（标准关系图）会打开 Obsidian 原生关系图。
 
-Nodes come from the current vault, and connections come exclusively from Obsidian's resolved links. No SEO OS client data is imported. Background hemisphere wires are decorative, not relationships. Sample notes are labeled. Templates, build copies, scripts, Guide, and Meta are omitted. The scene displays at most 2,000 notes and 10,000 links and reports when a limit applies. It renders on interaction without continuous animation or external dependencies.
+节点来自当前笔记库，连线只使用 Obsidian 已解析的链接，不导入 SEO OS 客户数据。背景半球线条是装饰，不表示关系。示例笔记有明确标识。模板、构建副本、脚本、Guide、Meta 不参与展示。场景最多显示 2,000 篇笔记和 10,000 条链接，达到限制时会提示。仅在交互时渲染，无持续动画或外部依赖。
 
-## Privacy and authority
+## 隐私与权限
 
-Home keeps orientation short: up to three tasks needing attention, capture, connected horizons, and a compact recorded-signal summary. Today shows up to five attention tasks. Attention means overdue, due today, scheduled today, or high priority. The full task dashboard remains available.
+首页简洁呈现方向：最多三项需要关注的任务、捕获入口、相互关联的规划层次，以及精简的已记录信息摘要。今日模块最多显示五项需关注任务。“需要关注”指逾期、今日到期、计划今日完成或高优先级。完整任务仪表盘仍可打开。
 
-Review holds three property-based charts: daily effort, a habit calendar, and life-area scores from the latest scored retreat. Select 7, 30, or 90 days for daily charts. Recorded daily effort columns open their source notes with click, Enter, or Space. A disclosure table provides daily values, and the retreat button opens the source of life-area scores. Sample notes are excluded by default; the Include samples control explicitly adds them. Missing scores stay blank and habits distinguish unchecked from unrecorded. Effort averages use recorded numeric scores from 1 to 10. Record counters exclude templates and build copies. See [[22 Data Definitions]] for coverage and calculation details.
+复盘模块包含三个基于属性的图表：每日努力、习惯日历，以及最近一次有评分复盘中的生活领域分数。每日图表可选择 7、30 或 90 天。对已记录的每日努力柱形点击，或按 Enter、Space，可打开来源笔记。详情表提供每日数值，复盘按钮打开生活领域评分的来源。默认排除示例笔记，只有主动开启 Include samples（包含示例）后才计入。缺失分数保持空白，习惯区分未勾选与未记录。努力均值仅使用已记录的 1 至 10 数值评分。记录计数排除模板和构建副本。覆盖率与计算细节见 [[22 Data Definitions|数据定义]]。
 
-Plan includes a six-week month calendar. Highlighted dates open existing daily notes. Today can invoke the existing QuickAdd capture when its note is missing. Other empty dates are disabled. Month navigation never generates notes or edits journal content.
+规划模块包含六周的月历。高亮日期打开已有每日笔记；今日笔记缺失时可调用现有 QuickAdd 捕获。其他没有笔记的日期不可操作。切换月份绝不会生成笔记或编辑日记内容。
 
-The application version is 0.20.0. Synthetic browser checks are not native Obsidian acceptance. Complete [[23 Native Acceptance]] before treating a packaged candidate as release-ready.
+应用版本为 0.20.0。合成数据的浏览器检查不等于原生 Obsidian 验收。在将打包候选版本视为可以发布之前，必须完成 [[23 Native Acceptance|原生验收记录]]。
 
-## Minimal visual summaries
+## 简洁的可视化摘要
 
-- Home's transparent Brain preview is non-animated and capped at 300 alphabetically selected eligible notes. Its connections only describe that subset, not the entire vault. Sample counts remain visible. Explore Brain opens the full module in the same tab and keeps the sidebar.
-- Focus groups each indexed open task exactly once: overdue first, then today, upcoming, or unscheduled/other. High priority remains visible in the feed but is not a second overlapping count. Past scheduled dates without a current due date fall into Other.
-- Create selects one content pipeline at a time. Lane labels come from the board's actual level-two headings. Counts represent indexed checkbox items in each lane, including checked items, not completion percentages. Missing metadata and sample boards have explicit unavailable/excluded states. Open board edits in the original Kanban surface; lane buttons open the source heading.
-- Library lists typed notes under `07 Library/`, including completed books and sources, and filters by actual type and status properties. Samples remain excluded. Missing status is shown as not set, not inferred as ready. A `cover` property can reference an existing local PNG, JPEG, WebP, or GIF, including a wikilink. Remote covers are never requested; unavailable covers use a text fallback.
-- AI shows an integration overview and observable configuration. It does not test provider authentication or send requests. An available key is not evidence of a working connection.
+- 首页透明的关系图谱预览不播放动画，最多展示按字母顺序选出的 300 篇符合条件的笔记。连线只反映这个子集，并不代表整个笔记库。示例数量始终可见。Explore Brain（探索关系图谱）在同一标签页打开完整模块，并保留侧边栏。
+- 聚焦模块把每项已索引的未完成任务恰好归入一组：先判断逾期，再判断今日、即将到来或未安排/其他。高优先级仍显示在列表中，但不会产生另一份重叠计数。计划日期已过、且没有当前到期日期的任务归入 Other（其他）。
+- 创作模块一次选择一条内容流程。列标签来自看板实际的二级标题，数量表示每列已索引的复选框条目，包括已勾选条目，并非完成百分比。缺少元数据或示例看板时，会明确显示不可用或已排除状态。Open board（打开看板）进入原有 Kanban 界面编辑；列按钮打开来源标题。
+- 资料库列出 `07 Library/` 下带类型的笔记，包括已读书籍和来源材料，并按实际的 type 与 status 属性筛选。示例仍被排除。缺少状态时显示“未设置”，不会推断为“已就绪”。`cover` 属性可引用已有的本地 PNG、JPEG、WebP 或 GIF，包括 wikilink。不请求远程封面；封面不可用时使用文字替代。
+- AI 模块展示集成概览与可观察到的配置，不测试服务商认证，也不发送请求。存在 key 并不能证明连接可用。
 
-The top-bar View menu controls optional visuals globally or for the current module, compact/comfortable spacing, and 3/6/12 items for record and Focus lists. Home and Today keep their attention limits of three and five. Controls apply to the current open view only and reset when that view is recreated. Restore view defaults resets display choices without editing any vault configuration. Persisted presets and additional property mappings are not implemented.
+顶部 View（视图）菜单可针对全局或当前模块控制可选可视化、紧凑/舒适间距，以及记录列表和聚焦列表的 3/6/12 条显示量。首页和今日模块仍保持三项与五项关注任务的上限。这些控制只影响当前打开的视图，重新创建视图时恢复默认值。Restore view defaults（恢复视图默认设置）只重置展示选项，不修改笔记库配置。尚未实现持久化预设和额外属性映射。
 
-Home uses a consistent section gap, quieter primary actions, and a compact setup notice. System status remains in AI rather than being duplicated at the bottom of Home. Planning labels report notes created, not planning completion.
+首页采用一致的章节间距、较克制的主要操作样式和简洁的设置提示。系统状态保留在 AI 模块，不在首页底部重复展示。规划标签报告已创建笔记数量，而不是规划完成度。
 
-Today shows recorded-property coverage, not a life score. Focus workload segments use the same mutually exclusive categories as its filters. Projects and People counts require explicit `#project/<slug>` or `#p/<slug>` tags in indexed open tasks. People discussions also require `#discuss`. A task tagged to several people can appear for each person; the queue counts person-discussion links, not unique tasks. Slugs follow the existing lowercase ASCII-alphanumeric-to-hyphen convention. Untagged tasks are not assigned by inference.
+今日模块展示已记录属性的覆盖率，不是对人生评分。聚焦的工作量分段与其筛选采用相同、互斥的分类。项目与人际数量要求已索引的未完成任务明确带有 `#project/<slug>` 或 `#p/<slug>` 标签；人物待讨论事项还必须带 `#discuss`。同一任务标记多个人时，可出现在每个人的列表中，因此队列统计的是“人物与讨论事项的关联数”，而不是去重任务数。Slug 沿用小写 ASCII 字母数字、其他字符转连字符的现有约定。没有标签的任务不会被推测归属。
 
-Create shows up to three indexed open-item previews in each lane, while its heading count still includes all indexed checkbox items, including checked items. Source-line links open the original board. Missing and partial indexes remain visible. AI's diagram distinguishes the provider path from optional local MCP tools; neither branch implies a tested live connection.
+创作模块每列最多预览三项已索引的未完成条目，但标题数量仍包含所有已索引复选框条目，包括已完成条目。来源行链接会打开原始看板，索引缺失或不完整的状态仍清晰可见。AI 图示区分服务商连接路径与可选本地 MCP 工具；两条路径都不意味着已经验证过真实连接。
 
-The live Today cockpit reads configured `dq_*` and `habit_*` frontmatter through Obsidian's local metadata cache. It does not render or send journal prose. Capture buttons run the existing QuickAdd commands so routing stays visible and deterministic. Universal Capture can also create actual Project, Person, newsletter, video-script, article, course-lesson, book, and study notes from the canonical templates, leaving an existing same-name note untouched.
+今日的实时面板通过 Obsidian 本地元数据缓存读取配置中的 `dq_*` 和 `habit_*` frontmatter，不渲染或发送日记正文。捕获按钮运行现有 QuickAdd 命令，使写入去向保持清晰且确定。统一捕获也可从标准模板创建真正的项目、人物、邮件通讯、视频脚本、文章、课程课时、读书和学习笔记，已有同名笔记保持不变。
 
-AI may retrieve, summarize, detect patterns, and draft. Human approval is the operating policy, not a universal enforcement guarantee. The AI module reports the observable Agent Client permission setting; it does not change it. The application does not contain direct network, process, or vault-write capabilities.
+AI 可以检索、总结、识别规律和起草。人工批准是操作规则，并非对所有路径的强制保证。AI 模块报告可观察到的 Agent Client 权限设置，不修改它。应用本身不包含直接联网、启动进程或写入笔记库的能力。
 
-## Architecture
+## 架构
 
-The first-party plugin lives at `.obsidian/plugins/life-os-app/`. `main.js` registers the dashboard ItemView and a compatibility standalone Brain view. A shared child component renders the embedded Brain and Home preview, releasing listeners and observers on removal. `styles.css` owns the responsive visual system, and `manifest.json` carries its independent version. The view refreshes when metadata changes or Markdown files are created, deleted, or renamed.
+第一方插件位于 `.obsidian/plugins/life-os-app/`。`main.js` 注册仪表盘 ItemView 和用于兼容的独立 Brain 视图。共享子组件渲染嵌入式关系图谱与首页预览，在移除时释放监听器和观察器。`styles.css` 定义响应式视觉系统，`manifest.json` 保存其独立版本。元数据变化，或 Markdown 文件被创建、删除、重命名时，视图会刷新。
 
-The application deliberately composes the existing tools:
+应用有意组合已有工具：
 
-- QuickAdd owns capture and periodic-note creation.
-- Templater owns note structure and the guided Daily Questions prompt.
-- Tasks, Dataview, and Kanban own their mature query and board surfaces.
-- Agent Client and Local REST API provide the governed AI path.
-- Markdown, links, and frontmatter remain portable if the application plugin is disabled.
+- QuickAdd 负责捕获和周期笔记创建。
+- Templater 负责笔记结构和引导式每日问题提示词。
+- Tasks、Dataview、Kanban 提供各自成熟的查询与看板界面。
+- Agent Client 和 Local REST API 提供受规则约束的 AI 操作路径。
+- 即使禁用应用插件，Markdown、链接和 frontmatter 仍可移植使用。
 
-## Verification
+## 验证
 
-Run `node scripts/verify_life_os_app.mjs .` for the focused application gate. The complete template build also runs this gate through `scripts/verify_template.py`. Static and mock-runtime verification do not replace checking the view inside Obsidian after a reload.
+运行 `node scripts/verify_life_os_app.mjs .`，执行应用专项检查。完整模板构建也会通过 `scripts/verify_template.py` 运行这项检查。静态和模拟运行时验证，不能替代重新加载后在真实 Obsidian 中检查视图。
 
-## Build direction
+## 构建方向
 
-The implementation sequence is vertical: make one module truly useful with real local data, verify it, then expand. Today is the first live cockpit. The remaining modules can gain richer native summaries without changing their canonical files or bypassing the existing approval boundary.
+实现按完整模块逐步推进：先让一个模块使用真实本地数据发挥作用，验证后再扩展。今日模块是第一个实时工作面板。其他模块可以逐步增加更丰富的原生摘要，同时保持权威文件不变，也不绕过既有批准边界。

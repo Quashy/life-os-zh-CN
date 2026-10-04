@@ -1,15 +1,15 @@
-Mike's warning (22:42): it took him five years; copying it in a weekend is "a fantastic way to bounce off of Obsidian entirely." Pick one workflow, run it for 30 days, then add the next.
+Mike 提醒（22:42）：他花了五年才建成这套系统；周末就想照搬全部，是“让你彻底放弃 Obsidian 的绝佳方式”。先选一套工作流，使用 30 天，再添加下一层。
 
-| Days | Layer | Definition of done |
+| 天数 | 添加的层次 | 完成标准 |
 | --- | --- | --- |
-| 1 to 30 | **Daily journaling + daily questions** | Daily note opened every morning, questions answered every night, at least 25 of 30 days scored |
-| 31 to 60 | **Habits** (3 to 5 checkboxes) + **weekly note** | Friday review done 4 weeks running using the week table |
-| 61 to 90 | **First personal retreat** + quarterly note + life theme and values | Retreat note complete, wheel rendered, 3 intentions embedded in the weekly note |
-| 91 to 120 | **Tasks**: master list, dashboard, 2 to 3 project notes, people notes for regulars | A week executed from the dashboard with time blocking |
-| 121 to 150 | **Writing**: one board, one type, block-id quotes in book notes | One piece taken from backlog to published inside the vault |
-| 151+ | **Reading plan / Bible module**, second retreat, dashboard tuning | Second retreat compared against the first |
+| 1 至 30 | **每日日记 + 每日问题** | 每早打开每日笔记，每晚回答问题，30 天中至少 25 天有评分 |
+| 31 至 60 | **习惯**（3 至 5 个复选框）+ **每周笔记** | 使用每周表格，连续 4 周完成周五回顾 |
+| 61 至 90 | **第一次个人复盘** + 季度笔记 + 生活主题与价值观 | 复盘笔记完整，生命之轮正常显示，三个意向嵌入每周笔记 |
+| 91 至 120 | **任务**：总清单、仪表盘、2 至 3 篇项目笔记、经常联系的人物笔记 | 根据仪表盘选择任务，配合时间块执行完整一周 |
+| 121 至 150 | **写作**：一个看板、一种类型、读书笔记中带块 ID 的引文 | 一篇作品在笔记库内从待办走到发布 |
+| 151 及以后 | **阅读计划 / 《圣经》模块**、第二次复盘、仪表盘调整 | 把第二次复盘与第一次对照 |
 
-Rules:
-- Do not add a layer while the previous one is below 80% consistency.
-- Delete what you do not use. A widget that shows nothing is a seam.
-- Change the templates, not the dashboards.
+规则：
+- 上一层的持续执行率低于 80% 时，不添加新层。
+- 删除不用的内容。一个始终没有内容的组件，只会增加割裂。
+- 修改模板，而不是仪表盘。

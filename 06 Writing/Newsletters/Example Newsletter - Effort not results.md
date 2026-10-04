@@ -11,18 +11,32 @@ tags:
   - writing/newsletter
   - example
 ---
-> Example draft showing the "source and draft in the same vault" move: the quote below is embedded from the book note, not copied.
+> 示例主题：为努力评分，不为结果评分。
+
+> 这是一篇示例草稿，演示“资料与草稿放在同一个仓库”的做法：下方引文从读书笔记中嵌入，无需复制。
 
 ## Hook
-Most habit trackers punish you for the wrong thing.
+
+*开场引子*
+
+大多数习惯追踪工具惩罚的，其实不是该关注的事。
 
 ## Body
+
+*正文*
+
 ![[Triggers (Marshall Goldsmith)#^daily-questions]]
 
-That one reframe is why my journaling finally stuck...
+正是这个视角的转变，让我终于坚持写下了日记……
 
 ## Call to action
-Reply with the one question you would ask yourself every night.
+
+*行动邀请*
+
+回复一个你愿意每晚问自己的问题。
 
 ## Sources used
+
+*引用资料*
+
 - [[Triggers (Marshall Goldsmith)]]

@@ -11,6 +11,9 @@ tags:
 Tag: `#p/example-person-alex-rivera`
 
 ## To discuss
+
+*待讨论*
+
 ```tasks
 not done
 tags include #discuss
@@ -19,6 +22,9 @@ sort by created
 ```
 
 ## Open tasks involving them
+
+*与此人有关的未完成任务*
+
 ```tasks
 not done
 tags include #p/example-person-alex-rivera
@@ -27,6 +33,9 @@ sort by due
 ```
 
 ## Projects together
+
+*共同项目*
+
 ```dataview
 LIST
 FROM "04 Projects"
@@ -34,7 +43,13 @@ WHERE contains(people, this.file.link) AND status != "done"
 ```
 
 ## Notes
-- Example person note. The "To discuss" query collects anything tagged `#discuss #p/example-person-alex-rivera` from anywhere in the vault; open this note before the meeting.
+
+*笔记*
+
+- 这是一篇示例人物笔记。"To discuss" 查询会汇总仓库中所有带 `#discuss #p/example-person-alex-rivera` 标签的事项；会面前打开这篇笔记即可查看。
 
 ## Meeting log
-- 2026-08-26 Created.
+
+*会面记录*
+
+- 2026-08-26 创建。

@@ -1,9 +1,12 @@
 // Visual and interaction regression using synthetic notes only.
 // Usage: PLAYWRIGHT_MODULE=/absolute/path/to/playwright node scripts/verify_brain_view.mjs
 import fs from "node:fs";
+import path from "node:path";
 import { createRequire } from "node:module";
 import assert from "node:assert/strict";
 const require = createRequire(import.meta.url);
+const artifactDir = path.resolve(process.env.LIFE_OS_ARTIFACT_DIR || "work/life-os-preview");
+fs.mkdirSync(artifactDir, { recursive: true });
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
 const browser = await chromium.launch({ headless: true,
   ...(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}) });
@@ -64,29 +67,29 @@ try {
   assert.equal(await page.evaluate(() => window.brain.projected.length), 160);
   assert.ok(await page.evaluate(() => window.brain.visibleLabels.length > 0));
   const autoLabels = await page.evaluate(() => window.brain.visibleLabels.length);
-  await page.getByRole("combobox", { name: "Note labels" }).selectOption("all");
+  await page.getByRole("combobox", { name: "笔记标签" }).selectOption("all");
   assert.ok(await page.evaluate((n) => window.brain.visibleLabels.length >= n, autoLabels));
-  await page.getByRole("combobox", { name: "Note labels" }).selectOption("off");
+  await page.getByRole("combobox", { name: "笔记标签" }).selectOption("off");
   assert.equal(await page.evaluate(() => window.brain.visibleLabels.length), 0);
-  await page.getByRole("combobox", { name: "Note labels" }).selectOption("auto");
+  await page.getByRole("combobox", { name: "笔记标签" }).selectOption("auto");
   assert.ok(await page.evaluate(() => new Set(window.brain.projected.map((p) => p.depth.toFixed(3))).size > 10), "Nodes must have genuine projected depth");
-  await page.getByRole("button", { name: "People", exact: true }).click();
-  assert.match(await page.locator(".life-os-brain-header p").innerText(), /^20 notes/);
-  await page.getByRole("button", { name: "All regions", exact: true }).click();
+  await page.getByRole("button", { name: "人际", exact: true }).click();
+  assert.match(await page.locator(".life-os-brain-header p").innerText(), /^20 篇笔记/);
+  await page.getByRole("button", { name: "全部分区", exact: true }).click();
   await page.getByRole("searchbox").fill("Note 001");
-  assert.match(await page.locator(".life-os-brain-header p").innerText(), /^1 notes/);
+  assert.match(await page.locator(".life-os-brain-header p").innerText(), /^1 篇笔记/);
   await page.locator(".life-os-brain-note").first().click();
-  await page.getByRole("button", { name: "Open note", exact: true }).click();
+  await page.getByRole("button", { name: "打开笔记", exact: true }).click();
   assert.deepEqual(await page.evaluate(() => window.openedNotes), ["03 Planning/Note 001.md"]);
   await page.getByRole("searchbox").fill("");
-  await page.getByRole("button", { name: "Clear selection", exact: true }).click();
+  await page.getByRole("button", { name: "清除选择", exact: true }).click();
   await page.locator("canvas").focus();
   const yaw = await page.evaluate(() => window.brain.yaw);
   await page.keyboard.press("ArrowRight");
   assert.ok(await page.evaluate((before) => window.brain.yaw > before, yaw));
   await page.keyboard.press("+");
   assert.ok(await page.evaluate(() => window.brain.zoom > 1));
-  await page.getByRole("button", { name: "Reset view", exact: true }).click();
+  await page.getByRole("button", { name: "重置视图", exact: true }).click();
   assert.equal(await page.evaluate(() => window.brain.zoom), 1);
   const rotationTimings = await page.evaluate(() => {
     const times = [], initial = window.brain.yaw;
@@ -100,11 +103,11 @@ try {
   await page.keyboard.down("Shift"); await page.mouse.down();
   await page.mouse.move(canvasBox.x+80,canvasBox.y+70); await page.mouse.up(); await page.keyboard.up("Shift");
   assert.equal(await page.evaluate(() => window.brain.panX),30);
-  await page.getByRole("button", { name: "Reset view", exact: true }).click();
+  await page.getByRole("button", { name: "重置视图", exact: true }).click();
   const position = await page.evaluate(() => { const p = window.brain.projected.at(-1); const r = window.brain.canvas.getBoundingClientRect(); return { x: p.x + r.left, y: p.y + r.top }; });
   await page.mouse.move(position.x, position.y);
   assert.equal(await page.locator(".life-os-brain-tooltip").isVisible(), true);
-  assert.match(await page.locator(".life-os-brain-tooltip").innerText(), /4 connections.*Sample note/);
+  assert.match(await page.locator(".life-os-brain-tooltip").innerText(), /4 个关联.*示例笔记/);
   assert.equal(await page.evaluate(() => window.brain.selected), null);
   assert.ok(await page.evaluate(() => Boolean(window.brain.hovered)));
   await page.evaluate(() => {
@@ -122,16 +125,16 @@ try {
     return samples.sort((a, b) => a - b);
   });
   console.log(`Synthetic 160-note render CPU time: median ${timings[15].toFixed(1)}ms, p95 ${timings[28].toFixed(1)}ms (not native frame latency).`);
-  await page.screenshot({ path: "/tmp/life-os-brain-hover-preview.png" });
+  await page.screenshot({ path: path.join(artifactDir, "life-os-brain-hover-preview.png") });
   await page.mouse.move(10, 10);
   assert.equal(await page.locator(".life-os-brain-tooltip").isVisible(), false);
   assert.equal(await page.evaluate(() => window.brain.hovered), null);
   await page.mouse.click(position.x, position.y);
   assert.ok(await page.evaluate(() => Boolean(window.brain.selected)));
-  await page.getByRole("button", { name: "Clear selection", exact: true }).click();
-  await page.getByRole("button", { name: "Standard graph", exact: true }).click();
+  await page.getByRole("button", { name: "清除选择", exact: true }).click();
+  await page.getByRole("button", { name: "标准关系图谱", exact: true }).click();
   assert.deepEqual(await page.evaluate(() => window.graphCommands), ["graph:open"]);
-  await page.screenshot({ path: "/tmp/life-os-brain-preview.png" });
+  await page.screenshot({ path: path.join(artifactDir, "life-os-brain-preview.png") });
   await page.setViewportSize({ width: 390, height: 844 });
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
   assert.deepEqual(errors, []);

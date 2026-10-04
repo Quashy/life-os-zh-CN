@@ -6,17 +6,26 @@ tags:
   - bible/chapter
   - example
 ---
-> Note-as-chapter. Used for the daily reading plan. Drop your public-domain text (KJV, WEB) here, or generate all chapter notes with `scripts/split_bible.py`.
+> 一章对应一篇笔记，用于每日阅读计划。可将公有领域版本的文本（KJV、WEB）放在这里，或使用 `scripts/split_bible.py` 生成全部章节笔记。
 
 ## Text
-1. In the beginning God created the heaven and the earth.
-2. And the earth was without form, and void; and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters.
-3. And God said, Let there be light: and there was light.
+
+*正文*
+
+1. 起初，神创造了天地。
+2. 地空虚混沌，深渊之上是一片黑暗；神的灵运行在水面上。
+3. 神说：“要有光。”于是就有了光。
 
 ## Verses
+
+*经文*
+
 [[Genesis 1.1]] · [[Genesis 1.2]] · [[Genesis 1.3]]
 
 ## Notes and sermons linking here
+
+*链接到这里的笔记与讲道*
+
 ```dataview
 LIST
 WHERE contains(file.outlinks, this.file.link) AND !contains(file.folder, "09 Reading/Chapters")

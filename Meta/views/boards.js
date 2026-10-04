@@ -7,6 +7,13 @@ const cfg = dv.page("Meta/Compass Config") || {};
 const FOLDER = input && input.folder ? input.folder : null;
 const COMPACT = !!(input && input.compact);
 const DONE_LANES = (cfg.board_done_lanes || "Done,Published,Archive").split(",").map(s => s.trim().toLowerCase());
+const displayLabels = {
+  "Projects Board": "项目看板", "Newsletter Board": "通讯看板", "YouTube Board": "视频看板",
+  "Article Board": "文章看板", "Course Board": "课程看板", "Ideas": "灵感",
+  "In progress": "进行中", "In Progress": "进行中", "Drafting": "起草中",
+  "Done": "已完成", "Published": "已发布", "Archive": "归档",
+};
+const displayLabel = value => Object.prototype.hasOwnProperty.call(displayLabels, value) ? displayLabels[value] : value;
 
 const boards = dv.pages(FOLDER ? `"${FOLDER}"` : "").where(p => {
   const fm = p.file.frontmatter || {};
@@ -15,7 +22,7 @@ const boards = dv.pages(FOLDER ? `"${FOLDER}"` : "").where(p => {
 
 const root = dv.container.createEl("div", { cls: "lifeos-widget" });
 if (boards.length === 0) {
-  root.createEl("p", { text: "No Kanban boards found (a board is any note with `kanban-plugin` in its properties)." });
+  root.createEl("p", { text: "尚无 Kanban 看板。创建笔记并添加 kanban-plugin 属性，即可在此查看。" });
 } else {
   const parsed = [];
   for (const b of boards) {
@@ -43,26 +50,26 @@ if (boards.length === 0) {
   if (COMPACT) {
     const table = root.createEl("table", { cls: "lifeos-table" });
     const tr = table.createEl("thead").createEl("tr");
-    for (const h of ["Board", "Open", "Done", "Lanes"]) tr.createEl("th", { text: h });
+    for (const h of ["看板", "未完成", "已完成", "栏目"]) tr.createEl("th", { text: h });
     const tb = table.createEl("tbody");
     for (const b of parsed) {
       const r = tb.createEl("tr");
       const td = r.createEl("td");
-      const a = td.createEl("a", { text: b.page.file.name, cls: "internal-link", attr: { href: b.page.file.path, "data-href": b.page.file.path } });
+      const a = td.createEl("a", { text: displayLabel(b.page.file.name), cls: "internal-link", attr: { href: b.page.file.path, "data-href": b.page.file.path } });
       a.addEventListener("click", e => { e.preventDefault(); app.workspace.openLinkText(b.page.file.path, "", false); });
       r.createEl("td", { text: String(b.open) });
       r.createEl("td", { text: String(b.done) });
-      r.createEl("td", { text: b.lanes.filter(l => !DONE_LANES.includes(l.name.toLowerCase())).map(l => `${l.name} ${l.cards.length}`).join("  ·  ") });
+      r.createEl("td", { text: b.lanes.filter(l => !DONE_LANES.includes(l.name.toLowerCase())).map(l => `${displayLabel(l.name)} ${l.cards.length}`).join("  ·  ") });
     }
   } else {
     for (const b of parsed) {
       const h = root.createEl("h4");
-      const a = h.createEl("a", { text: b.page.file.name, cls: "internal-link", attr: { href: b.page.file.path, "data-href": b.page.file.path } });
+      const a = h.createEl("a", { text: displayLabel(b.page.file.name), cls: "internal-link", attr: { href: b.page.file.path, "data-href": b.page.file.path } });
       a.addEventListener("click", e => { e.preventDefault(); app.workspace.openLinkText(b.page.file.path, "", false); });
-      h.appendText(`  (${b.open} open, ${b.done} done)`);
+      h.appendText(`（${b.open} 项未完成，${b.done} 项已完成）`);
       const table = root.createEl("table", { cls: "lifeos-table" });
       const tr = table.createEl("thead").createEl("tr");
-      for (const l of b.lanes) tr.createEl("th", { text: `${l.name} (${l.cards.length})` });
+      for (const l of b.lanes) tr.createEl("th", { text: `${displayLabel(l.name)} (${l.cards.length})` });
       const row = table.createEl("tbody").createEl("tr");
       for (const l of b.lanes) {
         const td = row.createEl("td");
@@ -73,7 +80,7 @@ if (boards.length === 0) {
           if (c.done) d.style.opacity = "0.5";
           d.style.fontSize = "0.85em";
         }
-        if (l.cards.length > items.length) td.createEl("div", { text: `+${l.cards.length - items.length} more` }).style.opacity = "0.6";
+        if (l.cards.length > items.length) td.createEl("div", { text: `另有 ${l.cards.length - items.length} 项` }).style.opacity = "0.6";
       }
     }
   }

@@ -1,26 +1,26 @@
-# Workflow 6: Task Management
+# 工作流 6：任务管理
 
-Video: 14:11 to 16:42. "Every task is one click away from the context that explains why it exists."
+视频：14:11 至 16:42。“每一项任务，点击一次就能看到解释它为何存在的上下文。”
 
-## Pieces (14:34)
-| Piece | Here |
+## 组成（14:34）
+| 组成 | 本笔记库的实现 |
 | --- | --- |
-| Tasks plugin, inline tasks | any `- [ ]` line anywhere; emoji format (📅 due, ⏳ scheduled, 🔁 recurring, ⏫ priority) |
-| Master task list you never read | `08 Tasks/Tasks.md`, fed by the QuickAdd **Add task** command |
-| Project membership by tag | `#project/<slug>`; the project note's queries collect them |
-| People notes with queries | `05 People/`, `Templates/Person.md`; `#p/<slug>` |
-| "Discuss" roll-up | task tagged `#discuss #p/<slug>` shows in that person's **To discuss** and in the dashboard's **To discuss (by person)** |
-| Task dashboard | `00 Dashboards/Task Dashboard.md`: overdue, today, next 7 days, discuss, high priority undated, inbox, done this week |
+| Tasks 插件与行内任务 | 任意位置的 `- [ ]` 行；使用 emoji 格式：📅 到期、⏳ 计划、🔁 重复、⏫ 优先级 |
+| 无需直接查看的任务总清单 | `08 Tasks/Tasks.md`，由 QuickAdd 的 **Add task**（添加任务）命令写入 |
+| 通过标签归属项目 | `#project/<slug>`；项目笔记中的查询会汇总这些任务 |
+| 带查询的人物笔记 | `05 People/`、`Templates/Person.md`；使用 `#p/<slug>` |
+| 待讨论事项汇总 | 带 `#discuss #p/<slug>` 的任务，显示在该人物的 **To discuss**（待讨论）和仪表盘的 **To discuss (by person)**（按人物汇总的待讨论事项）中 |
+| 任务仪表盘 | `00 Dashboards/Task Dashboard.md`：逾期、今日、未来 7 天、待讨论、无日期高优先级、收件箱、本周完成 |
 
-Slug = note title lowercased, non-alphanumerics to `-`. The Project and Person templates print the exact tag at the top of the note.
+Slug 的规则：笔记标题转小写，将非字母数字字符替换成 `-`。Project 和 Person 模板会在笔记顶部显示准确标签。
 
-## Execution model (16:07)
-The dashboard is a **recommendation engine**. Pick what you will do, then time block it on a calendar or paper. "The computer is the brain, but the notebook is the list."
+## 执行方式（16:07）
+仪表盘是**推荐引擎**。先选择要做什么，再在日历或纸上安排时间块。“电脑负责思考，笔记本承载清单。”
 
-## When this is the wrong system (15:50)
-Location-based reminders, dozens of client projects with SLAs, shared team task tracking. Use a dedicated tool for that job and keep the rest here.
+## 不适合这套系统的情况（15:50）
+基于位置的提醒、数十个带 SLA 的客户项目、多人协作任务追踪。这类工作应交给专用工具，其余内容仍可放在这里。
 
-## Practices
-- Capture everything to the master list; sort later by adding a tag or a date.
-- Dates are for things that are actually due. Undated + tagged is the normal state.
-- Before a meeting, open the person's note. After, log one line in their meeting log.
+## 使用建议
+- 先把所有事项捕获到任务总清单，再通过标签或日期整理。
+- 日期用于真正有期限的事情。没有日期但带有标签，是正常状态。
+- 会前打开人物笔记，会后在对方的会议记录中记下一行。

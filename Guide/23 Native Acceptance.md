@@ -1,51 +1,66 @@
-# Native acceptance record
+# 原生验收记录
 
-This separates reproducible development evidence from native acceptance. A local candidate has passed automated packaging and disposable extraction checks, but native acceptance is not complete. Run the remaining checks against a fresh, sanitized candidate in an isolated Obsidian profile. Do not use real personal notes or provider credentials for the basic acceptance pass.
+> 以下候选标识与“2026-09-09 开发检查”保留上游历史记录，不代表当前中文候选包已通过验收。中文候选包必须重新记录版本、校验和、平台与测试结果，不直接继承上游的通过状态。
 
-## Identify the candidate
+本记录区分可复现的开发证据与原生验收。一个本地候选版本已通过自动打包和临时目录解压检查，但原生验收尚未完成。请在隔离的 Obsidian 配置环境中，使用新解压且已清理敏感内容的候选版本完成其余检查。基础验收不得使用真实个人笔记或服务商凭据。
 
-- Template version: 1.1.0 candidate
-- Life OS plugin version: 0.20.0
-- Archive SHA256: use the exact candidate's external `.sha256` sidecar; not embedded here to avoid self-referential hashes
-- Operating system and Obsidian version: not recorded
-- Test date and reviewer: not recorded
-- Result: automated development checks passed; native acceptance incomplete
+## 中文版本开发验收，2026-09-25
 
-## Required checks
+Windows Obsidian 1.13.7 的独立测试库已实际执行以下核心检查：
 
-| Check | Expected behavior | Result |
+- 用户手动信任测试库并启用插件，Life OS 中文首页自动加载。
+- 设置清单、习惯、任务、项目与助手页面渲染；16 个助手工作流按钮存在。
+- 快捷键创建今日笔记，保留六个 `dq_*` 与三个 `habit_*` 属性。
+- 每日问题逐项输入并保存九项答案，今日模块及复盘显示对应 8.0/10 测试评分。
+- QuickAdd 将带“汉化验收测试”标识的任务写入测试库收件箱。
+- 修复快速捕获弹窗后原生显示三组共 16 项，并验证任务入口能打开正确捕获目标。
+
+以上为核心流程证据，不代表下方全部扩展检查通过。最终 ZIP 的准确 SHA256、代码一致性和截图记录在包外验收报告，避免哈希自引用。测试记录与首次启动生成的本地状态不回流到分发包。未执行移动端、模型认证、真实 AI 请求和个人笔记库备份恢复。
+
+## 标识候选版本（上游历史）
+
+- 模板版本：1.1.0 candidate
+- Life OS 插件版本：0.20.0
+- 压缩包 SHA256：使用该候选包对应的外置 `.sha256` 文件；不在本页嵌入，以避免哈希自引用
+- 操作系统与 Obsidian 版本：未记录
+- 测试日期与检查人：未记录
+- 结果：自动开发检查通过；原生验收未完成
+
+## 必须完成的检查
+
+| 检查项 | 预期行为 | 结果 |
 | --- | --- | --- |
-| Extraction | No unsafe paths, symlinks, or unexpected files; manifest matches | Automated candidate restore passed; rerun for the exact delivered ZIP |
-| Cold start | Restricted-mode decision is explicit; Home opens after plugins load | Not tested |
-| Reload twice | No duplicate views or stale listeners | Not tested |
-| Home and Today | Accurate empty states; samples do not enter live commitments | Not tested |
-| Capture | Existing QuickAdd routes work; same-name notes are not overwritten | Not tested |
-| Task navigation | Clicking a task opens its exact source line without changing it | Not tested |
-| Calendar | Existing notes open; missing non-today dates are not created | Not tested |
-| Review | Chart values reconcile with fixture properties and source-day links | Not tested |
-| Brain | 3D rotation, pan, zoom, labels, search, filters, hover, and note opening work | Not tested |
-| Keyboard | Navigation and chart details work without a mouse | Not tested |
-| Layout | Narrow panes, 200 percent zoom, light and dark themes remain usable | Not tested |
-| Privacy | No shipped keys or sessions; prompt buttons do not auto-send | Not tested |
-| Bridge | Listener and loopback configuration are checked locally without exposing keys | Not tested |
-| Backup restore | Restore a fixture vault and verify notes and settings | Not tested |
+| 解压 | 无不安全路径、符号链接或意外文件；清单匹配 | 自动候选包还原检查已通过；必须针对最终交付的 ZIP 重新运行 |
+| 冷启动 | 明确作出安全模式选择；插件加载后打开首页 | 未测试 |
+| 连续重新加载两次 | 无重复视图或残留监听器 | 未测试 |
+| 首页与今日 | 空状态准确；示例不进入真实承诺事项 | 未测试 |
+| 捕获 | 现有 QuickAdd 路由正常，同名笔记不被覆盖 | 未测试 |
+| 任务导航 | 点击任务打开准确的来源行，不修改任务 | 未测试 |
+| 日历 | 打开已有笔记；不创建缺失的非今日笔记 | 未测试 |
+| 复盘 | 图表数值与测试属性一致，来源日期链接正确 | 未测试 |
+| 关系图谱 | 三维旋转、平移、缩放、标签、搜索、筛选、悬停与打开笔记正常 | 未测试 |
+| 键盘 | 无鼠标也可完成导航并查看图表详情 | 未测试 |
+| 布局 | 窄面板、200% 缩放、浅色与深色主题仍可使用 | 未测试 |
+| 隐私 | 不携带 key 或会话；提示词按钮不自动发送 | 未测试 |
+| 桥接 | 在本地检查监听与回环配置，不暴露 key | 未测试 |
+| 备份恢复 | 恢复测试笔记库，核对笔记与设置 | 未测试 |
 
-## Separate optional checks
+## 独立的可选检查
 
-Provider authentication, an actual AI request, external calendar integration, and mobile-specific functionality require separate authorization and evidence. Leave them not tested if they were not exercised. A desktop browser fixture does not prove mobile or native behavior.
+服务商认证、真实 AI 请求、外部日历集成及移动端专属功能，需要另行授权并提供证据。没有实际执行时，保持“未测试”。桌面浏览器测试环境不能证明移动端或原生应用行为。
 
-## Evidence rules
+## 证据规则
 
-Bind screenshots and results to the exact candidate checksum. Label synthetic fixtures visibly. Record failures and skipped checks. A passing static, mock-runtime, or browser test does not mark this record complete.
+将截图与结果绑定到候选包的准确校验和。合成测试数据必须有醒目标识。记录失败项与跳过项。静态、模拟运行时或浏览器测试通过，不能据此将本记录标记为验收完成。
 
-## Development checks, 2026-09-09
+## 开发检查，2026-09-09
 
-Life OS application 0.20.0 passed 59 static and mock-runtime checks. The Assistant contract verifier passed 16 explicit non-auto-send workflows and context disclosure checks. Eleven synthetic temporary-directory release-safety tests passed. The dashboard browser fixture passed all ten dashboard modules, Home spacing, task-source navigation, month navigation, charts, library filters, workload and discussion summaries, per-module visual controls, narrow document widths, and a light-theme smoke check.
+Life OS 应用 0.20.0 通过 59 项静态和模拟运行时检查。Assistant 契约检查通过 16 个明确不自动发送的工作流及上下文披露检查。11 项使用合成临时目录的发布安全测试通过。仪表盘浏览器测试环境通过了全部十个仪表盘模块、首页间距、任务来源导航、月份导航、图表、资料库筛选、工作量与待讨论摘要、各模块可视化控制、窄文档宽度，以及浅色主题冒烟检查。
 
-The Brain browser regression fixture passed graph filtering, search, hover, selection, note opening, keyboard controls, zoom, reset, and cleanup. Its latest synthetic rotation CPU timing was median 5.4 ms and p95 6.2 ms. This measures neither native Obsidian frame latency nor mobile performance.
+关系图谱浏览器回归测试通过图谱筛选、搜索、悬停、选择、打开笔记、键盘操作、缩放、重置和清理。最近一次合成旋转 CPU 耗时中位数为 5.4 ms，p95 为 6.2 ms；这既不是原生 Obsidian 帧延迟，也不是移动端性能测量。
 
-A sanitized local candidate passed 165 template checks. Its ZIP sidecar and embedded file hashes were checked after extraction into a disposable directory. No personal vault was overwritten or restored. The archive remains a development candidate, not an accepted public release. No provider request or publication was performed. Screenshots use synthetic records, with a visible fixture label and stubbed icons.
+一个已清理敏感内容的本地候选版本通过了 165 项模板检查。解压到临时目录后，核对了 ZIP 的外置校验文件和内嵌文件哈希。未覆盖或恢复任何个人笔记库。该压缩包仍是开发候选版本，不是已验收的公开发行版。未向服务商发送请求，也未发布。截图使用带可见测试标识的合成记录和替代图标。
 
-## User-reported testing
+## 用户报告的测试
 
-The owner reports having tested and checked the system. That is useful user-reported evidence, but the exact platform, tested artifact, workflow coverage, and results were not specified. Do not infer that every native checklist item passed. Record those details during the next native acceptance run.
+所有者表示已测试并检查系统。这是有价值的用户报告，但未明确具体平台、测试产物、覆盖的工作流和结果。不能由此推断所有原生验收项目都已通过。应在下一次原生验收时记录这些细节。

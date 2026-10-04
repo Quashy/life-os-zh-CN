@@ -2,6 +2,7 @@
 // Usage:
 //   await dv.view("Meta/views/dailyquestions", { days: 30 })              interactive (dropdown + toggles)
 //   await dv.view("Meta/views/dailyquestions", { from: "2026-07-01", to: "2026-09-30" })  fixed range
+const escapeLabel = value => String(value).replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"})[c]);
 const cfg = dv.page("Meta/Compass Config") || {};
 const FOLDER = cfg.daily_folder || "01 Journal/Daily";
 const PREFIX = cfg.dq_prefix || "dq_";
@@ -23,24 +24,24 @@ for (const p of pages) {
   }
 }
 const keys = Object.keys(series).sort();
-const label = k => k.slice(PREFIX.length).replace(/[_-]+/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+const label = k => { const value = cfg.property_labels?.[k]; return typeof value === "string" && value.trim() ? value.trim() : k.slice(PREFIX.length).replace(/[_-]+/g, " ").replace(/\b\w/g, c => c.toUpperCase()); };
 
 const root = dv.container.createEl("div", { cls: "lifeos-widget" });
 if (keys.length === 0) {
-  root.createEl("p", { text: `No number properties starting with "${PREFIX}" found in ${FOLDER} yet. Answer your daily questions (Templates/Daily Questions Prompt.md) and they will show up here.` });
+  root.createEl("p", { text: `尚未在 ${FOLDER} 找到以 ${PREFIX} 开头的数值属性。运行 Templates/Daily Questions Prompt.md 完成每日问答后，即可查看趋势。` });
 } else {
   const controls = root.createEl("div", { cls: "lifeos-controls" });
   let sel = null;
   if (!FIXED_FROM) {
     sel = controls.createEl("select");
-    for (const [v, l] of [[7, "Last 7 days"], [30, "Last 30 days"], [90, "Last 90 days"], [365, "Last year"], [0, "All time"]]) {
+    for (const [v, l] of [[7, "最近 7 天"], [30, "最近 30 天"], [90, "最近 90 天"], [365, "最近一年"], [0, "全部时间"]]) {
       const o = sel.createEl("option", { text: l });
       o.value = String(v);
       if (v === DEFAULT_RANGE) o.selected = true;
     }
     sel.addEventListener("change", render);
   } else {
-    controls.createEl("span", { text: `${FIXED_FROM.format("YYYY-MM-DD")} → ${FIXED_TO ? FIXED_TO.format("YYYY-MM-DD") : "today"}` });
+    controls.createEl("span", { text: `${FIXED_FROM.format("YYYY-MM-DD")} → ${FIXED_TO ? FIXED_TO.format("YYYY-MM-DD") : "今天"}` });
   }
   const toggles = {};
   keys.forEach((k, i) => {
@@ -74,8 +75,8 @@ if (keys.length === 0) {
       svg += `<line x1="${ml}" x2="${W - mr}" y1="${y(g)}" y2="${y(g)}" stroke="currentColor" stroke-opacity="${g === 1 || g === 10 ? 0.35 : 0.12}" />`;
       if (g === 1 || g === 5 || g === 10) svg += `<text x="${ml - 6}" y="${y(g) + 4}" font-size="11" text-anchor="end" fill="currentColor" opacity="0.7">${g}</text>`;
     }
-    svg += `<text x="${ml}" y="${H - 8}" font-size="11" fill="currentColor" opacity="0.7">${from.format("MMM D, YYYY")}</text>`;
-    svg += `<text x="${W - mr}" y="${H - 8}" font-size="11" text-anchor="end" fill="currentColor" opacity="0.7">${to.format("MMM D, YYYY")}</text>`;
+    svg += `<text x="${ml}" y="${H - 8}" font-size="11" fill="currentColor" opacity="0.7">${from.format("YYYY-MM-DD")}</text>`;
+    svg += `<text x="${W - mr}" y="${H - 8}" font-size="11" text-anchor="end" fill="currentColor" opacity="0.7">${to.format("YYYY-MM-DD")}</text>`;
     const rows = [];
     keys.forEach((k, i) => {
       if (!toggles[k].checked) return;
@@ -92,8 +93,8 @@ if (keys.length === 0) {
     });
     svg += `</svg>`;
     chart.innerHTML = svg;
-    let html = `<table class="lifeos-table"><thead><tr><th>Question</th><th>Average</th><th>Min</th><th>Max</th><th>Days answered</th><th>Latest</th></tr></thead><tbody>`;
-    for (const r of rows) html += `<tr>${r.map(c => `<td>${c}</td>`).join("")}</tr>`;
+    let html = `<table class="lifeos-table"><thead><tr><th>问题</th><th>平均分</th><th>最低分</th><th>最高分</th><th>答题天数</th><th>最近评分</th></tr></thead><tbody>`;
+    for (const r of rows) html += `<tr>${r.map(c => `<td>${escapeLabel(c)}</td>`).join("")}</tr>`;
     html += `</tbody></table>`;
     tableEl.innerHTML = html;
   }

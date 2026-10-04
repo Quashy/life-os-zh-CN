@@ -10,8 +10,10 @@ tags:
 ---
 # Genesis 1:1
 
-In the beginning God created the heaven and the earth.
+*创世记 1:1*
 
-Chapter: [[Genesis 1]] · Next: [[Genesis 1.2]]
+起初，神创造了天地。
 
-> Note-as-verse. Sermon notes, topical Bibles, book notes, and study notes link here, so the local graph becomes a personal cross-reference library. Paper-Bible highlights are recorded as note-level tags (for example `#highlight`, `#topic/creation`).
+所属章节：[[Genesis 1]] · 下一节：[[Genesis 1.2]]
+
+> 一节经文对应一篇笔记。讲道笔记、主题经文、读书笔记和研读笔记都可以链接到这里，让局部关系图成为个人交叉参考资料库。纸质圣经中的高亮标记可记录为笔记级标签（例如 `#highlight`、`#topic/creation`）。
